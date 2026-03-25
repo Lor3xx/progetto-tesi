@@ -11,6 +11,12 @@ llm = ChatGroq(
     temperature=0.2,
 )
 
+llm_eval = ChatGroq(
+    api_key=settings.groq_api_key,
+    model=settings.groq_eval_model,
+    temperature=0.0,  # valutazione più oggettiva possibile
+)
+
 # Embeddings - HuggingFace in locale, nessuna API key necessaria
 embeddings = HuggingFaceEmbeddings(
     model_name=settings.embedding_model,

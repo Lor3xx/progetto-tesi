@@ -7,7 +7,8 @@ dotenv.load_dotenv()
 class Settings(BaseSettings):
     # Groq
     groq_api_key: str = os.getenv("GROQ_API_KEY")
-    groq_llm_model: str = "llama-3.3-70b-versatile"
+    groq_eval_model: str = "llama-3.1-8b-instant"  # veloce e leggero
+    groq_llm_model: str = "llama-3.3-70b-versatile"  # solo per risposta finale
     groq_vision_model: str = "meta-llama/llama-4-scout-17b-16e-instruct"
     
     # HuggingFace Embeddings
@@ -23,7 +24,8 @@ class Settings(BaseSettings):
     
     # Logica agente
     retrieval_top_k: int = 5
-    min_eval_score: float = 0.7
+    min_eval_chunk_score: float = 0.5 #soglia per considerare un chunk rilevante e usarlo nella risposta
+    min_eval_score: float = 0.8 #soglia minima per accettare la risposta del modello senza retry
     max_retries: int = 2
 
     # Accettazione nuovi documenti
