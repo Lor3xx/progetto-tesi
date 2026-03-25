@@ -1,6 +1,11 @@
-def main():
-    print("Hello from backend!")
+from contextlib import asynccontextmanager
+from fastapi import FastAPI
+from src.services.pdf_processor import ingest_base_knowledge
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # all'avvio: ingestisce i PDF base se non già presenti
+    ingest_base_knowledge()
+    yield
 
-if __name__ == "__main__":
-    main()
+app = FastAPI(lifespan=lifespan)

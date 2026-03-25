@@ -43,3 +43,7 @@ requests
 
 fastapi
 uvicorn
+
+pymupdf
+pymupdf4llm
+pillow
