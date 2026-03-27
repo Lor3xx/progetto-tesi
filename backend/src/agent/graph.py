@@ -100,7 +100,7 @@ def partial_node(state: AgentState) -> AgentState:
 
 # --- Costruzione del grafo ---
 
-def build_graph() -> StateGraph:
+def build_graph(checkpointer: SqliteSaver) -> StateGraph:
     graph = StateGraph(AgentState)
 
     # Registra i nodi
@@ -161,9 +161,5 @@ def build_graph() -> StateGraph:
     graph.add_edge("finalize", END)
     graph.add_edge("partial", END)
 
-    memory = SqliteSaver.from_conn_string(settings.sqlite_path)
-    return graph.compile(checkpointer=memory)
+    return graph.compile(checkpointer=checkpointer)
 
-
-# Istanza globale compilata, importata dalle route FastAPI
-rag_graph = build_graph()

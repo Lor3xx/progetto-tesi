@@ -12,8 +12,6 @@ export default function Home() {
 				{/* ── Chat area ── */}
 				<ChatBody />
 
-				{/* ── Input bar ── */}
-				<InputBar />
 			</div>
 		</div>
 	);

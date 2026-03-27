@@ -31,6 +31,7 @@ not sourced from specific documents.
 Answer in the same language as the user's question.
 If the question is a greeting or a polite interaction respond in a friendly manner, 
 without being too formal and say in what you can help.
+Answer in the same language as the user's question.
 """
 
 
