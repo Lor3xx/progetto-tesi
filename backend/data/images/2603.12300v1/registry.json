@@ -1,0 +1,26 @@
+{
+  "source": "2603.12300v1.pdf",
+  "total_images_processed": 4,
+  "images": [
+    {
+      "path": "data\\images\\2603.12300v1\\page_12_img_316.jpeg",
+      "page": 12,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.12300v1\\page_12_img_317.jpeg",
+      "page": 12,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.12300v1\\page_12_img_318.jpeg",
+      "page": 12,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.12300v1\\page_13_img_319.jpeg",
+      "page": 13,
+      "status": "skipped"
+    }
+  ]
+}

@@ -32,5 +32,8 @@ class Settings(BaseSettings):
     min_acceptable_score: float = 0.6 #se inferiore rifiuto
     min_ingestion_score: float = 0.8 #se maggiore accetto, se in mezzo chiedo a llm
 
+    # Checkpointing con SQLite
+    sqlite_path: str = "./data/chat_history.db"
+
 
 settings = Settings()  # istanza globale, importi questa ovunque

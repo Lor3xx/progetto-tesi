@@ -1,0 +1,101 @@
+{
+  "source": "2603.02891v2.pdf",
+  "total_images_processed": 19,
+  "images": [
+    {
+      "path": "data\\images\\2603.02891v2\\page_4_img_575.png",
+      "page": 4,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.02891v2\\page_4_img_576.png",
+      "page": 4,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.02891v2\\page_4_img_578.png",
+      "page": 4,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.02891v2\\page_4_img_579.png",
+      "page": 4,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.02891v2\\page_4_img_580.png",
+      "page": 4,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.02891v2\\page_5_img_586.png",
+      "page": 5,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.02891v2\\page_5_img_587.png",
+      "page": 5,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.02891v2\\page_5_img_588.png",
+      "page": 5,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.02891v2\\page_5_img_590.png",
+      "page": 5,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.02891v2\\page_5_img_593.jpeg",
+      "page": 5,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.02891v2\\page_5_img_594.png",
+      "page": 5,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.02891v2\\page_7_img_609.png",
+      "page": 7,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.02891v2\\page_7_img_614.png",
+      "page": 7,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.02891v2\\page_7_img_619.png",
+      "page": 7,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.02891v2\\page_7_img_624.png",
+      "page": 7,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.02891v2\\page_7_img_629.png",
+      "page": 7,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.02891v2\\page_7_img_634.png",
+      "page": 7,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.02891v2\\page_8_img_510.jpeg",
+      "page": 8,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.02891v2\\page_9_img_512.jpeg",
+      "page": 9,
+      "status": "skipped"
+    }
+  ]
+}

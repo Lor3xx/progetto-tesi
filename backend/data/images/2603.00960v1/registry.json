@@ -1,0 +1,143 @@
+{
+  "source": "2603.00960v1.pdf",
+  "total_images_processed": 27,
+  "images": [
+    {
+      "path": "data\\images\\2603.00960v1\\page_3_img_79.png",
+      "page": 3,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.00960v1\\page_3_img_80.png",
+      "page": 3,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.00960v1\\page_3_img_81.png",
+      "page": 3,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.00960v1\\page_3_img_82.png",
+      "page": 3,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.00960v1\\page_3_img_83.png",
+      "page": 3,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.00960v1\\page_3_img_92.png",
+      "page": 3,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.00960v1\\page_3_img_93.png",
+      "page": 3,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.00960v1\\page_3_img_94.png",
+      "page": 3,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.00960v1\\page_3_img_95.png",
+      "page": 3,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.00960v1\\page_4_img_97.png",
+      "page": 4,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.00960v1\\page_4_img_98.png",
+      "page": 4,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.00960v1\\page_4_img_99.png",
+      "page": 4,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.00960v1\\page_4_img_100.png",
+      "page": 4,
+      "status": "embedded",
+      "chunk_id": "2603.00960v1.pdf_img::chunk_0004::5cfe4e93"
+    },
+    {
+      "path": "data\\images\\2603.00960v1\\page_4_img_101.png",
+      "page": 4,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.00960v1\\page_4_img_102.png",
+      "page": 4,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.00960v1\\page_4_img_103.png",
+      "page": 4,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.00960v1\\page_4_img_104.png",
+      "page": 4,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.00960v1\\page_4_img_105.png",
+      "page": 4,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.00960v1\\page_4_img_107.png",
+      "page": 4,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.00960v1\\page_4_img_109.png",
+      "page": 4,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.00960v1\\page_4_img_110.png",
+      "page": 4,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.00960v1\\page_4_img_111.png",
+      "page": 4,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.00960v1\\page_4_img_112.png",
+      "page": 4,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.00960v1\\page_4_img_115.png",
+      "page": 4,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.00960v1\\page_4_img_116.png",
+      "page": 4,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.00960v1\\page_4_img_120.png",
+      "page": 4,
+      "status": "embedded",
+      "chunk_id": "2603.00960v1.pdf_img::chunk_0004::2469efb0"
+    },
+    {
+      "path": "data\\images\\2603.00960v1\\page_4_img_121.png",
+      "page": 4,
+      "status": "skipped"
+    }
+  ]
+}

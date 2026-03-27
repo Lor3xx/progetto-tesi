@@ -1,5 +1,6 @@
 from langgraph.graph import StateGraph, END
-
+from langgraph.checkpoint.sqlite import SqliteSaver
+from langchain_core.messages import HumanMessage, SystemMessage, AIMessage  
 from agent.state import AgentState
 from agent.nodes.enhance import enhance_node
 from agent.nodes.retrieve import retrieve_node
@@ -62,6 +63,10 @@ def no_documents_node(state: AgentState) -> AgentState:
             "The topic may not be covered in the loaded knowledge base."
         ),
         "response_status": "unknown",
+        "messages": [AIMessage(content=(
+            "I could not find any relevant documents to answer your question. "
+            "The topic may not be covered in the loaded knowledge base."
+        ))],
     }
 
 
@@ -71,6 +76,7 @@ def finalize_node(state: AgentState) -> AgentState:
         **state,
         "final_response": state["draft_response"],
         "response_status": "complete",
+        "messages": [AIMessage(content=state["draft_response"])],
     }
 
 
@@ -88,6 +94,7 @@ def partial_node(state: AgentState) -> AgentState:
         **state,
         "final_response": state["draft_response"] + disclaimer,
         "response_status": "partial",
+        "messages": [AIMessage(content=state["draft_response"] + disclaimer)],
     }
 
 
@@ -154,7 +161,8 @@ def build_graph() -> StateGraph:
     graph.add_edge("finalize", END)
     graph.add_edge("partial", END)
 
-    return graph.compile()
+    memory = SqliteSaver.from_conn_string(settings.sqlite_path)
+    return graph.compile(checkpointer=memory)
 
 
 # Istanza globale compilata, importata dalle route FastAPI

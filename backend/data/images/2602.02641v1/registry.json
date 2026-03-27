@@ -1,0 +1,36 @@
+{
+  "source": "2602.02641v1.pdf",
+  "total_images_processed": 6,
+  "images": [
+    {
+      "path": "data\\images\\2602.02641v1\\page_5_img_319.png",
+      "page": 5,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2602.02641v1\\page_5_img_323.png",
+      "page": 5,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2602.02641v1\\page_5_img_327.png",
+      "page": 5,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2602.02641v1\\page_5_img_331.png",
+      "page": 5,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2602.02641v1\\page_5_img_335.png",
+      "page": 5,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2602.02641v1\\page_5_img_339.png",
+      "page": 5,
+      "status": "skipped"
+    }
+  ]
+}

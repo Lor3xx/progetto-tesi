@@ -33,6 +33,7 @@ arxiv
 langgraph-cli[inmem]
 langchain-tavily
 langgraph-supervisor
+langgraph-checkpoint-sqlite
 
 neo4j==5.14
 streamlit

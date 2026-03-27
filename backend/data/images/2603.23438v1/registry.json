@@ -1,0 +1,147 @@
+{
+  "source": "2603.23438v1.pdf",
+  "total_images_processed": 28,
+  "images": [
+    {
+      "path": "data\\images\\2603.23438v1\\page_6_img_687.png",
+      "page": 6,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.23438v1\\page_6_img_688.png",
+      "page": 6,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.23438v1\\page_6_img_689.png",
+      "page": 6,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.23438v1\\page_6_img_690.png",
+      "page": 6,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.23438v1\\page_6_img_691.png",
+      "page": 6,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.23438v1\\page_6_img_692.png",
+      "page": 6,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.23438v1\\page_6_img_693.png",
+      "page": 6,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.23438v1\\page_6_img_694.png",
+      "page": 6,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.23438v1\\page_6_img_695.png",
+      "page": 6,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.23438v1\\page_6_img_696.png",
+      "page": 6,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.23438v1\\page_6_img_697.png",
+      "page": 6,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.23438v1\\page_6_img_698.png",
+      "page": 6,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.23438v1\\page_6_img_699.png",
+      "page": 6,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.23438v1\\page_6_img_700.png",
+      "page": 6,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.23438v1\\page_6_img_701.png",
+      "page": 6,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.23438v1\\page_6_img_702.png",
+      "page": 6,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.23438v1\\page_6_img_703.png",
+      "page": 6,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.23438v1\\page_6_img_704.png",
+      "page": 6,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.23438v1\\page_6_img_705.png",
+      "page": 6,
+      "status": "embedded",
+      "chunk_id": "2603.23438v1.pdf_img::chunk_0006::d9f8d4cb"
+    },
+    {
+      "path": "data\\images\\2603.23438v1\\page_6_img_706.png",
+      "page": 6,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.23438v1\\page_6_img_707.png",
+      "page": 6,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.23438v1\\page_23_img_824.png",
+      "page": 23,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.23438v1\\page_23_img_825.png",
+      "page": 23,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.23438v1\\page_23_img_826.png",
+      "page": 23,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.23438v1\\page_23_img_827.png",
+      "page": 23,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.23438v1\\page_23_img_828.png",
+      "page": 23,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.23438v1\\page_23_img_829.png",
+      "page": 23,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2603.23438v1\\page_23_img_830.png",
+      "page": 23,
+      "status": "skipped"
+    }
+  ]
+}

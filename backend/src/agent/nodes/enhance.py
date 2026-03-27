@@ -99,6 +99,7 @@ def enhance_node(state: AgentState) -> AgentState:
 
     return {
         **state,
+        "messages": [HumanMessage(content=state["user_query"])],
         "is_generic_cybersecurity": parsed.get("is_generic", False),
         "is_off_topic": parsed.get("is_off_topic", False),
         "enhanced_query": parsed.get("enhanced_query", state["user_query"]),

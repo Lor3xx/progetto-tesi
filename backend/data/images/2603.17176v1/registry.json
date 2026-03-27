@@ -1,0 +1,12 @@
+{
+  "source": "2603.17176v1.pdf",
+  "total_images_processed": 1,
+  "images": [
+    {
+      "path": "data\\images\\2603.17176v1\\page_3_img_169.png",
+      "page": 3,
+      "status": "embedded",
+      "chunk_id": "2603.17176v1.pdf_img::chunk_0003::8f447775"
+    }
+  ]
+}

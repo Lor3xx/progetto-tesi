@@ -1,0 +1,36 @@
+{
+  "source": "2511.19331v1.pdf",
+  "total_images_processed": 5,
+  "images": [
+    {
+      "path": "data\\images\\2511.19331v1\\page_16_img_433.jpeg",
+      "page": 16,
+      "status": "embedded",
+      "chunk_id": "2511.19331v1.pdf_img::chunk_0016::26908dd6"
+    },
+    {
+      "path": "data\\images\\2511.19331v1\\page_16_img_435.jpeg",
+      "page": 16,
+      "status": "embedded",
+      "chunk_id": "2511.19331v1.pdf_img::chunk_0016::9d2fdd93"
+    },
+    {
+      "path": "data\\images\\2511.19331v1\\page_16_img_437.png",
+      "page": 16,
+      "status": "embedded",
+      "chunk_id": "2511.19331v1.pdf_img::chunk_0016::1dcc33ea"
+    },
+    {
+      "path": "data\\images\\2511.19331v1\\page_16_img_439.png",
+      "page": 16,
+      "status": "embedded",
+      "chunk_id": "2511.19331v1.pdf_img::chunk_0016::a567e844"
+    },
+    {
+      "path": "data\\images\\2511.19331v1\\page_17_img_441.jpeg",
+      "page": 17,
+      "status": "embedded",
+      "chunk_id": "2511.19331v1.pdf_img::chunk_0017::e0cc8529"
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "source": "2512.08417v2.pdf",
+  "total_images_processed": 10,
+  "images": [
+    {
+      "path": "data\\images\\2512.08417v2\\page_1_img_137.png",
+      "page": 1,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2512.08417v2\\page_1_img_138.png",
+      "page": 1,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2512.08417v2\\page_5_img_225.png",
+      "page": 5,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2512.08417v2\\page_5_img_226.png",
+      "page": 5,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2512.08417v2\\page_5_img_227.png",
+      "page": 5,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2512.08417v2\\page_16_img_264.png",
+      "page": 16,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2512.08417v2\\page_16_img_265.png",
+      "page": 16,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2512.08417v2\\page_16_img_266.png",
+      "page": 16,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2512.08417v2\\page_16_img_267.png",
+      "page": 16,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\2512.08417v2\\page_17_img_274.png",
+      "page": 17,
+      "status": "skipped"
+    }
+  ]
+}
