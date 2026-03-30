@@ -6,6 +6,7 @@ from agent.nodes.enhance import enhance_node
 from agent.nodes.retrieve import retrieve_node
 from agent.nodes.respond import respond_node
 from agent.nodes.evaluate import evaluate_node
+from agent.nodes.classify import classify_node
 from config import settings
 
 
@@ -19,17 +20,19 @@ def route_after_enhance(state: AgentState) -> str:
 
 
 def route_after_retrieve(state: AgentState) -> str:
-    """
-    Dopo retrieve: se ci sono chunk sopra soglia genera la risposta,
-    altrimenti termina subito senza retry (il filtro score è già nel retriever).
-    """
     has_chunks = (
         len(state["retrieved_chunks"]) > 0 or
         len(state["retrieved_image_chunks"]) > 0
     )
     if has_chunks:
         return "respond"
-    return "no_documents"
+    # nessun documento trovato → classifica prima di rispondere
+    return "classify"
+
+
+def route_after_classify(state: AgentState) -> str:
+    # entrambi i casi vanno a respond, che gestisce i flag
+    return "respond"
 
 
 def route_after_respond(state: AgentState) -> str:
@@ -53,21 +56,6 @@ def route_after_evaluate(state: AgentState) -> str:
 
 
 # --- Nodi terminali ---
-
-def no_documents_node(state: AgentState) -> AgentState:
-    """Termina il flusso comunicando assenza di documenti pertinenti."""
-    return {
-        **state,
-        "final_response": (
-            "I could not find any relevant documents to answer your question. "
-            "The topic may not be covered in the loaded knowledge base."
-        ),
-        "response_status": "unknown",
-        "messages": [AIMessage(content=(
-            "I could not find any relevant documents to answer your question. "
-            "The topic may not be covered in the loaded knowledge base."
-        ))],
-    }
 
 
 def finalize_node(state: AgentState) -> AgentState:
@@ -106,9 +94,9 @@ def build_graph(checkpointer: SqliteSaver) -> StateGraph:
     # Registra i nodi
     graph.add_node("enhance", enhance_node)
     graph.add_node("retrieve", retrieve_node)
+    graph.add_node("classify", classify_node)
     graph.add_node("respond", respond_node)
     graph.add_node("evaluate", evaluate_node)
-    graph.add_node("no_documents", no_documents_node)
     graph.add_node("finalize", finalize_node)
     graph.add_node("partial", partial_node)
 
@@ -116,14 +104,9 @@ def build_graph(checkpointer: SqliteSaver) -> StateGraph:
     graph.set_entry_point("enhance")
 
     # Edge condizionale dopo enhance
-    graph.add_conditional_edges(
-        "enhance",
-        route_after_enhance,
-        {
-            "respond": "respond",
-            "retrieve": "retrieve",
-        }
-    )
+    graph.add_edge("enhance", "retrieve")
+
+    graph.add_edge("classify", "respond")
 
     # Edge condizionale dopo retrieve
     graph.add_conditional_edges(
@@ -131,7 +114,7 @@ def build_graph(checkpointer: SqliteSaver) -> StateGraph:
         route_after_retrieve,
         {
             "respond": "respond",
-            "no_documents": "no_documents",
+            "classify": "classify",
         }
     )
 
@@ -157,7 +140,6 @@ def build_graph(checkpointer: SqliteSaver) -> StateGraph:
     )
 
     # Tutti i nodi terminali vanno a END
-    graph.add_edge("no_documents", END)
     graph.add_edge("finalize", END)
     graph.add_edge("partial", END)
 

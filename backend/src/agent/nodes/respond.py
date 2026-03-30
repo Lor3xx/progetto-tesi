@@ -2,38 +2,13 @@ import base64
 import json
 from pathlib import Path
 
+from agent.prompts import RESPOND_GENERIC_PROMPT, RESPOND_SYSTEM_PROMPT, RESPOND_OFFTOPIC_PROMPT
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_core.documents import Document
 
 from config import settings
 from services.groq_client import llm
 from agent.state import AgentState, ImageResult
-
-# Prompt di sistema
-RESPOND_SYSTEM_PROMPT = """
-You are a specialized cybersecurity assistant. You answer questions based EXCLUSIVELY
-on the provided document excerpts and images.
-
-Rules:
-- Answer only using the provided context. Never invent or assume information.
-- Always cite your sources using the document name, without being redundant.
-- If you use an image, explicitly mention it (e.g. "As shown in the diagram from doc.pdf, page 3"). Otherwise don't say that you didn't use one.
-- If context is insufficient, say so clearly instead of guessing.
-- Be precise, technical, and concise.
-- Answer in the same language as the user's question.
-"""
-
-RESPOND_GENERIC_PROMPT = """
-You are a specialized cybersecurity assistant answering a general cybersecurity question.
-This is a foundational concept question, not requiring specific document lookup.
-Be precise, technical, and educational. Mention that this is general knowledge,
-not sourced from specific documents.
-Answer in the same language as the user's question.
-If the question is a greeting or a polite interaction respond in a friendly manner, 
-without being too formal and say in what you can help.
-Answer in the same language as the user's question.
-"""
-
 
 def _build_context_messages(state: AgentState) -> list:
     """
@@ -138,13 +113,14 @@ def respond_node(state: AgentState) -> AgentState:
 
     # Caso 1: domanda off topic
     if state["is_off_topic"]:
+        messages = [
+            SystemMessage(content=RESPOND_OFFTOPIC_PROMPT), 
+            HumanMessage(content=state["user_query"])
+        ]
+        response = llm.invoke(messages)
         return {
             **state,
-            "draft_response": (
-                "I'm a specialized cybersecurity assistant and can only answer "
-                "questions related to cybersecurity topics. "
-                "Your question appears to be outside my area of expertise."
-            ),
+            "draft_response": response.content,
             "response_status": "off_topic",
             "sources": [],
             "images": [],
@@ -161,12 +137,12 @@ def respond_node(state: AgentState) -> AgentState:
             **state,
             "draft_response": response.content,
             "final_response": response.content,
-            "response_status": "complete",
+            "response_status": "generic",
             "sources": [],
             "images": [],
         }
 
-    # Caso 3: nessun chunk trovato sopra soglia
+    # Caso 3: nessun chunk trovato sopra soglia (non si dovrebbe arrivare qua dato che graph blocca prima)
     has_chunks = (
         len(state["retrieved_chunks"]) > 0 or
         len(state["retrieved_image_chunks"]) > 0

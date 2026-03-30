@@ -15,13 +15,46 @@ const ChatBody = () => {
     const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
-    const [threadId, setThreadId] = useState<string | null>(null);
+    const [threadId, setThreadId] = useState<string | null>(() => {
+        // recupera il thread_id salvato al caricamento
+        if (typeof window !== "undefined") {
+            return localStorage.getItem("chat_thread_id");
+        }
+        return null;
+    });
     const bottomRef = useRef<HTMLDivElement>(null);
 
     // Auto-scroll quando arriva un messaggio nuovo
     useEffect(() => {
         bottomRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages, loading]);
+
+    useEffect(() => {
+        if (!threadId) return;
+
+        fetch(`${API_BASE}/chat/history/${threadId}`)
+            .then((r) => {
+                if (!r.ok) {
+                    localStorage.removeItem("chat_thread_id");
+                    setThreadId(null);
+                    return null;
+                }
+                return r.json();
+            })
+            .then((data) => {
+                if (!data) return;
+                const loaded: Message[] = data.messages.map((m: { role: string; content: string }) => ({
+                    id: uid(),
+                    role: m.role as "user" | "assistant",
+                    text: m.content,
+                    timestamp: new Date(),
+                }));
+                setMessages(loaded);
+            })
+            .catch(() => {
+                localStorage.removeItem("chat_thread_id");
+            });
+    }, []);
 
     const submit = useCallback(async (text: string) => {
         if (loading) return;
@@ -52,7 +85,10 @@ const ChatBody = () => {
             const elapsed = (performance.now() - t0) / 1000;
 
             // Salva il thread_id per i messaggi successivi
-            if (data.thread_id) setThreadId(data.thread_id);
+            if (data.thread_id) {
+                setThreadId(data.thread_id);
+                localStorage.setItem("chat_thread_id", data.thread_id);
+            }
 
             const assistantMsg: Message = {
                 id: uid(),

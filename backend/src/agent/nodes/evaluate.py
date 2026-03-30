@@ -1,26 +1,10 @@
 import json
+from agent.prompts import EVAL_RESPONSE_PROMPT
 from langchain_core.messages import HumanMessage, SystemMessage
 from agent.state import AgentState
 from services.groq_client import llm_eval
 
-EVAL_RESPONSE_PROMPT = """
-You are evaluating a generated response against a user query.
 
-Query: {query}
-Response: {response}
-
-Evaluate if the response fully and accurately answers the query.
-Respond ONLY in this JSON format:
-{
-  "score": 0.0-1.0,
-  "is_satisfactory": true/false,
-  "is_complete": true/false,
-  "is_accurate": true/false,
-  "is_on_topic": true/false,
-  "reasoning": "...",
-  "missing_aspects": ["..."]
-}
-"""
 
 def evaluate_node(state: AgentState) -> AgentState:
     user_content = (

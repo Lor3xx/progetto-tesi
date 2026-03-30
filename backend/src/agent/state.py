@@ -45,7 +45,8 @@ class AgentState(TypedDict):
     # --- Flag di controllo del flusso ---
     is_generic_cybersecurity: bool          # True → può rispondere senza documenti
     is_off_topic: bool                     # True → domanda fuori contesto, non risponde
-    response_status: str                    # "complete" | "partial" | "unknown" | "off-topic"
+    query_category: str                         # "specific" | "generic_cyber" | "off_topic"
+    response_status: str                    # "complete" | "partial" | "unknown" | "off-topic" | "generic"
 
     # --- Cronologia messaggi (LangChain messages) ---
     # add_messages è un reducer: invece di sovrascrivere, appende

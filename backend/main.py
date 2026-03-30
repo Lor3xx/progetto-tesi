@@ -92,6 +92,7 @@ async def chat(request: ChatRequest):
         images=[],
         is_generic_cybersecurity=False,
         is_off_topic=False,
+        query_category="unknown",
         response_status="unknown",
         messages=[],
     )
@@ -103,6 +104,16 @@ async def chat(request: ChatRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Errore nel grafo: {str(e)}")
 
+    #print di debug
+    print(f"Status        : {result['response_status']}")
+    print(f"Is generic    : {result['is_generic_cybersecurity']}")
+    print(f"Is off-topic  : {result['is_off_topic']}")
+    print(f"Enhanced query: {result['enhanced_query']}")
+    print(f"Eval score    : {result['eval_score']:.2f}")
+    print(f"Retry count   : {result['retry_count']}")
+    print(f"Sources       : {result['sources']}")
+    print(f"Images found  : {len(result['images'])}")
+
     return ChatResponse(
         answer=result["final_response"],
         thread_id=thread_id,
@@ -110,6 +121,7 @@ async def chat(request: ChatRequest):
         images=[ImageResult(**img) for img in result["images"]],
         status=result["response_status"],
         is_generic=result["is_generic_cybersecurity"],
+        query_category=result["query_category"],
     )
 
 
