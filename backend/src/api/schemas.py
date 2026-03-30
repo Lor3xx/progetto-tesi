@@ -20,6 +20,8 @@ class ChatResponse(BaseModel):
     images: list[ImageResult]
     status: str
     is_generic: bool
+    is_off_topic: bool
+    query_category: str
 
 
 class HistoryMessage(BaseModel):
@@ -38,3 +40,6 @@ class ConversationPreview(BaseModel):
 class ConversationListResponse(BaseModel):
     conversations: list[ConversationPreview]
     total: int
+
+class TitleUpdate(BaseModel):
+    new_title: str

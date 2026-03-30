@@ -37,6 +37,16 @@ async def lifespan(app: FastAPI):
     conn = sqlite3.connect(settings.sqlite_path, check_same_thread=False)
     conn.execute("PRAGMA journal_mode=WAL;")
     conn.execute("PRAGMA synchronous=NORMAL;")
+
+    # ✅ crea tabella conversations se non esiste
+    conn.execute("""
+    CREATE TABLE IF NOT EXISTS conversations (
+        thread_id TEXT PRIMARY KEY,
+        title TEXT
+    )
+    """)
+    conn.commit()
+
     checkpointer = SqliteSaver(conn)
     rag_graph = build_graph(checkpointer=checkpointer)
 
@@ -79,6 +89,13 @@ async def chat(request: ChatRequest):
         raise HTTPException(status_code=503, detail="Sistema non ancora pronto")
 
     thread_id = request.thread_id or str(uuid4())
+
+    conn = sqlite3.connect(settings.sqlite_path, check_same_thread=False)
+    conn.execute(
+        "INSERT OR IGNORE INTO conversations (thread_id, title) VALUES (?, ?)",
+        (thread_id, request.message[:80])
+    )
+    conn.commit()
 
     from agent.state import AgentState
     initial_state = AgentState(
@@ -126,6 +143,7 @@ async def chat(request: ChatRequest):
         images=[ImageResult(**img) for img in result["images"]],
         status=result["response_status"],
         is_generic=result["is_generic_cybersecurity"],
+        is_off_topic=result["is_off_topic"],
         query_category=result["query_category"],
     )
 

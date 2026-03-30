@@ -17,10 +17,11 @@ import sqlite3
 from datetime import datetime, timezone
 from typing import Optional
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Body, Depends, HTTPException, Query
 
 from config import settings 
-from api.schemas import ConversationListResponse, ConversationPreview 
+from api.schemas import ConversationListResponse, ConversationPreview, TitleUpdate
+import msgpack 
 
 router = APIRouter(prefix="/conversations", tags=["conversations"])
 
@@ -51,29 +52,6 @@ def get_db() -> sqlite3.Connection:
 # Utility: estrai il primo messaggio utente dal JSON dei metadata LangGraph
 # ---------------------------------------------------------------------------
 
-def _extract_title_from_checkpoint(raw_checkpoint: bytes | None) -> str:
-    data = _parse_checkpoint(raw_checkpoint)
-
-    channel_values: dict = data.get("channel_values", {})
-
-    # campi custom del tuo AgentState
-    for field in ("user_query", "query", "input", "question"):
-        value = channel_values.get(field)
-        if value and isinstance(value, str) and value.strip():
-            title = value.strip()
-            return title[:80] + ("…" if len(title) > 80 else "")
-
-    # fallback sui messaggi
-    messages = channel_values.get("messages", [])
-    if messages and isinstance(messages, list):
-        for m in messages:
-            if isinstance(m, dict) and m.get("type") == "human":
-                content = m.get("content")
-                if content:
-                    title = content.strip()
-                    return title[:80] + ("…" if len(title) > 80 else "")
-
-    return "Nuova conversazione"
 
 
 def _parse_ts_from_checkpoint(raw_checkpoint: bytes | None) -> str:
@@ -145,10 +123,12 @@ async def list_conversations(
             """
             SELECT
                 c.thread_id,
+                conv.title AS title,
                 MIN(c.checkpoint_id) AS first_checkpoint_id,
                 MAX(c.checkpoint_id) AS last_checkpoint_id,
                 COUNT(*)            AS checkpoint_count
             FROM checkpoints c
+            LEFT JOIN conversations conv ON c.thread_id = conv.thread_id
             GROUP BY c.thread_id
             ORDER BY last_checkpoint_id DESC
             LIMIT ? OFFSET ?
@@ -197,7 +177,7 @@ async def list_conversations(
                 (thread_id,),
             ).fetchone()
 
-            title = _extract_title_from_checkpoint(first_with_content)
+            title = row["title"] or "Nuova chat"
             created_at = _parse_ts_from_checkpoint(first_with_content)
             updated_at = _parse_ts_from_checkpoint(last_cp["checkpoint"] if last_cp else None)
             # Stima message_count: ogni coppia (utente + assistente) genera
@@ -240,10 +220,12 @@ async def get_conversation(
         row = db.execute(
             """
             SELECT
+                conv.title AS title,
                 MIN(checkpoint_id) AS first_checkpoint_id,
                 MAX(checkpoint_id) AS last_checkpoint_id,
                 COUNT(*)           AS checkpoint_count
             FROM checkpoints
+            LEFT JOIN conversations conv ON checkpoints.thread_id = conv.thread_id
             WHERE thread_id = ?
             """,
             (thread_id,),
@@ -283,7 +265,7 @@ async def get_conversation(
             (thread_id,),
         ).fetchone()
 
-        title = _extract_title_from_checkpoint(first_with_content)
+        title = row["title"] or "Nuova chat"
         created_at = _parse_ts_from_checkpoint(first_with_content)
         updated_at = _parse_ts_from_checkpoint(last_cp["checkpoint"] if last_cp else None)
         
@@ -322,3 +304,26 @@ async def delete_conversation(thread_id: str) -> None:
         conn.close()
     except sqlite3.Error as e:
         raise HTTPException(status_code=500, detail=f"Errore eliminazione: {e}")
+
+
+# ---------------------------------------------------------------------------
+# Endpoint: modifica il titolo della conversazione
+# ---------------------------------------------------------------------------
+@router.put("/{thread_id}/title", status_code=204)
+def update_conversation_title(thread_id: str, body: TitleUpdate):
+    conn = sqlite3.connect(settings.sqlite_path)
+
+    res = conn.execute(
+        """
+        UPDATE conversations
+        SET title = ?
+        WHERE thread_id = ?
+        """,
+        (body.new_title.strip(), thread_id),
+    )
+
+    if res.rowcount == 0:
+        raise HTTPException(404, "Conversazione non trovata")
+
+    conn.commit()
+    conn.close()

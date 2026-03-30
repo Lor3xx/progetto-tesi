@@ -9,7 +9,7 @@ export default function Sidebar() {
 	const [conversations, setConversations] = useState<ConversationPreview[]>([]);
 	const [activeId, setActiveId]           = useState<string | null>(null);
 	const [isLoading, setIsLoading]         = useState(true);
-	const [error, setError]                 = useState<string | null>(null);
+	const [status, setStatus]               = useState<"unknown" | "ready" | "error">("unknown");
 
 	// Leggi il thread attivo da localStorage al mount
 	useEffect(() => {
@@ -30,14 +30,29 @@ export default function Sidebar() {
 
 	const fetchConversations = useCallback(async () => {
 		try {
-			setError(null);
+			setStatus("unknown");
+			setIsLoading(true);
+
 			const res = await fetch(`${API_BASE}/conversations?limit=100`);
-			if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+			// 🔴 backend non raggiungibile o offline
+			if (!res.ok) {
+				setConversations([]);
+				setStatus("error");
+				return;
+			}
+
 			const data = await res.json();
-			setConversations(data.conversations);
+			setConversations(data?.conversations ?? []);
+			setStatus("ready");
+
 		} catch (err) {
-			setError("Errore caricamento.");
-			console.error("[Sidebar]", err);
+			// 🟡 backend spento → NON è errore UI
+			console.warn("[Sidebar] backend offline, nascondo conversazioni");
+			setStatus("error");
+
+			setConversations([]); // 👈 sidebar vuota
+
 		} finally {
 			setIsLoading(false);
 		}
@@ -70,6 +85,29 @@ export default function Sidebar() {
 		}
 	};
 
+	const handleUpdateTitle = async (threadId: string, title: string) => {
+		try {
+			const res = await fetch(`${API_BASE}/conversations/${threadId}/title`, {
+				method: "PUT",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ new_title: title })
+			});
+			if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+			setConversations((prev) =>
+				prev.map((c) =>
+					c.thread_id === threadId
+						? { ...c, title }
+						: c
+				)
+			);
+
+		} catch (err) {
+			console.error("[Sidebar] update title error:", err);
+			alert("Errore durante l'aggiornamento del titolo.");
+		}
+	}
+
 	return (
 		<aside className="sidebar">
 			<div className="sidebar-header">
@@ -85,17 +123,20 @@ export default function Sidebar() {
 
 			<div className="sidebar-list">
 				{isLoading && <p className="sidebar-status">Caricamento…</p>}
-				{!isLoading && error && <p className="sidebar-status sidebar-status--error">{error}</p>}
-				{!isLoading && !error && conversations.length === 0 && (
+				{!isLoading && status === "error" && (
+					<p className="sidebar-status">Offline</p>
+				)}
+				{!isLoading && status === "ready" && conversations.length === 0 && (
 					<p className="sidebar-status">Nessuna chat salvata.</p>
 				)}
-				{!isLoading && !error && conversations.map((conv) => (
+				{!isLoading && conversations.map((conv) => (
 					<ConversationItem
 						key={conv.thread_id}
 						conversation={conv}
 						isActive={conv.thread_id === activeId}
 						onSelect={handleSelect}
 						onDelete={handleDelete}
+						onUpdateTitle={handleUpdateTitle}
 					/>
 				))}
 			</div>
