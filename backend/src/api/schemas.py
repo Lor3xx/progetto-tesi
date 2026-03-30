@@ -25,3 +25,16 @@ class ChatResponse(BaseModel):
 class HistoryMessage(BaseModel):
     role: str
     content: str
+
+
+class ConversationPreview(BaseModel):
+    thread_id: str
+    title: str          # primo messaggio utente oppure fallback "Conversazione"
+    created_at: str     # ISO-8601 UTC
+    updated_at: str     # ISO-8601 UTC (checkpoint più recente)
+    message_count: int  # numero approssimativo di turni utente
+
+
+class ConversationListResponse(BaseModel):
+    conversations: list[ConversationPreview]
+    total: int

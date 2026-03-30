@@ -48,3 +48,4 @@ uvicorn
 pymupdf
 pymupdf4llm
 pillow
+msgpack

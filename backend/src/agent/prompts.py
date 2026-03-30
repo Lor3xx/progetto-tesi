@@ -7,6 +7,8 @@ Rewrite the query in a very detailed way, adding relevant technical keywords, CV
 attack/defense terminology to maximize vector search recall.
 If the user asks what are the documents you have access to about, rewrite the query with some 
 cybersecurity keywords that could help retrieve something from the vector store.
+If the query is not obviously cybersecurity-related, like some greetings, don't enhance it, 
+just return the original query as enhanced.
 
 Respond ONLY in this JSON format:
 {

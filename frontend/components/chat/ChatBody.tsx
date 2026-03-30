@@ -16,7 +16,6 @@ const ChatBody = () => {
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
     const [threadId, setThreadId] = useState<string | null>(() => {
-        // recupera il thread_id salvato al caricamento
         if (typeof window !== "undefined") {
             return localStorage.getItem("chat_thread_id");
         }
@@ -24,38 +23,62 @@ const ChatBody = () => {
     });
     const bottomRef = useRef<HTMLDivElement>(null);
 
-    // Auto-scroll quando arriva un messaggio nuovo
     useEffect(() => {
         bottomRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages, loading]);
 
-    useEffect(() => {
-        if (!threadId) return;
-
-        fetch(`${API_BASE}/chat/history/${threadId}`)
-            .then((r) => {
-                if (!r.ok) {
-                    localStorage.removeItem("chat_thread_id");
-                    setThreadId(null);
-                    return null;
-                }
-                return r.json();
-            })
-            .then((data) => {
-                if (!data) return;
-                const loaded: Message[] = data.messages.map((m: { role: string; content: string }) => ({
+    // ── Funzione riutilizzabile per caricare la history di un thread ──────────
+    const fetchHistory = useCallback(async (id: string) => {
+        try {
+            const r = await fetch(`${API_BASE}/chat/history/${id}`);
+            if (!r.ok) {
+                // Thread non trovato o scaduto: pulizia locale
+                localStorage.removeItem("chat_thread_id");
+                setThreadId(null);
+                setMessages([]);
+                return;
+            }
+            const data = await r.json();
+            const loaded: Message[] = data.messages.map(
+                (m: { role: string; content: string }) => ({
                     id: uid(),
                     role: m.role as "user" | "assistant",
                     text: m.content,
                     timestamp: new Date(),
-                }));
-                setMessages(loaded);
-            })
-            .catch(() => {
-                localStorage.removeItem("chat_thread_id");
-            });
+                })
+            );
+            setMessages(loaded);
+        } catch {
+            localStorage.removeItem("chat_thread_id");
+            setThreadId(null);
+            setMessages([]);
+        }
     }, []);
 
+    // ── Al mount: ripristina la sessione salvata in localStorage ──────────────
+    useEffect(() => {
+        const saved = localStorage.getItem("chat_thread_id");
+        if (saved) fetchHistory(saved);
+    }, [fetchHistory]);
+
+    // ── Evento dalla Sidebar: cambio thread o nuova chat ─────────────────────
+    useEffect(() => {
+        const handler = (e: Event) => {
+            const selectedId = (e as CustomEvent<string | null>).detail;
+            setThreadId(selectedId);
+            if (selectedId) {
+                localStorage.setItem("chat_thread_id", selectedId);
+                fetchHistory(selectedId);
+            } else {
+                localStorage.removeItem("chat_thread_id");
+                setMessages([]);
+            }
+        };
+        window.addEventListener("thread-selected", handler);
+        return () => window.removeEventListener("thread-selected", handler);
+    }, [fetchHistory]);
+
+    // ── Invio messaggio ───────────────────────────────────────────────────────
     const submit = useCallback(async (text: string) => {
         if (loading) return;
 
@@ -76,7 +99,7 @@ const ChatBody = () => {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     message: text,
-                    thread_id: threadId,  // null alla prima domanda
+                    thread_id: threadId,
                 }),
             });
 
@@ -84,10 +107,13 @@ const ChatBody = () => {
             const data = await res.json();
             const elapsed = (performance.now() - t0) / 1000;
 
-            // Salva il thread_id per i messaggi successivi
             if (data.thread_id) {
                 setThreadId(data.thread_id);
                 localStorage.setItem("chat_thread_id", data.thread_id);
+                // Notifica la Sidebar: aggiorna lista e segna questo thread come attivo
+                window.dispatchEvent(
+                    new CustomEvent("thread-updated", { detail: data.thread_id })
+                );
             }
 
             const assistantMsg: Message = {

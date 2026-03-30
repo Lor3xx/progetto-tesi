@@ -1,10 +1,11 @@
 import ChatBody from "@/components/chat/ChatBody";
-import InputBar from "@/components/layout/InputBar";
 import Navbar from "@/components/layout/Navbar";
+import Sidebar from "@/components/layout/Sidebar";
  
 export default function Home() {
 	return (
-		<div>
+		<div className="app-root">
+			<Sidebar />
 			<div className="page">
 				{/* ── Header ── */}
 				<Navbar/>

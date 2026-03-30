@@ -20,3 +20,17 @@ export interface Message {
     elapsed?: number;
     timestamp: Date;
 }
+
+
+export interface ConversationPreview {
+  thread_id: string;
+  title: string;
+  created_at: string;   // ISO-8601 UTC
+  updated_at: string;   // ISO-8601 UTC
+  message_count: number;
+}
+ 
+export interface ConversationListResponse {
+  conversations: ConversationPreview[];
+  total: number;
+}

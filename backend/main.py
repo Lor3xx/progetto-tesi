@@ -15,8 +15,9 @@ sys.path.append(str(Path(__file__).parent / "src"))
 
 from config import settings
 from agent.graph import build_graph
-from services.pdf_processor import ingest_base_knowledge
 from langgraph.checkpoint.sqlite import SqliteSaver
+
+from src.api.conversations import router as conversations_router
 
 
 # ─── Global state ─────────────────────────────────────────────────────────────
@@ -34,6 +35,8 @@ async def lifespan(app: FastAPI):
 
     # Checkpointer SQLite per la persistenza delle conversazioni
     conn = sqlite3.connect(settings.sqlite_path, check_same_thread=False)
+    conn.execute("PRAGMA journal_mode=WAL;")
+    conn.execute("PRAGMA synchronous=NORMAL;")
     checkpointer = SqliteSaver(conn)
     rag_graph = build_graph(checkpointer=checkpointer)
 
@@ -47,6 +50,8 @@ async def lifespan(app: FastAPI):
 # ─── FastAPI app ──────────────────────────────────────────────────────────────
 
 app = FastAPI(title="RAG Cybersecurity API", version="1.0.0", lifespan=lifespan)
+
+app.include_router(conversations_router)
 
 app.add_middleware(
     CORSMiddleware,
