@@ -16,13 +16,15 @@ def classify_node(state: AgentState) -> AgentState:
                  .removeprefix("```json").removeprefix("```")
                  .removesuffix("```").strip())
         parsed = json.loads(clean)
-        category = parsed.get("category", "off_topic")
     except json.JSONDecodeError:
-        category = "off_topic"
-
+        # Se il parsing fallisce, assumiamo che la query sia specifica (default più sicuro)
+        return {
+            **state,
+            "is_generic_cybersecurity": False,
+            "is_off_topic": False,
+        }
+    
     return {
         **state,
-        "is_generic_cybersecurity": category == "generic_cyber",
-        "is_off_topic": category == "off_topic",
-        "query_category": category,
+        "is_off_topic": parsed.get("is_off_topic", False),
     }

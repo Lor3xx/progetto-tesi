@@ -121,13 +121,21 @@ def respond_node(state: AgentState) -> AgentState:
         return {
             **state,
             "draft_response": response.content,
-            "response_status": "off_topic",
+            "response_status": "complete",
             "sources": [],
             "images": [],
         }
 
     # Caso 2: domanda generica cybersecurity, nessun documento necessario
-    if state["is_generic_cybersecurity"]:
+    
+        
+
+    # Caso 3: nessun chunk trovato sopra soglia, domanda generica
+    has_chunks = (
+        len(state["retrieved_chunks"]) > 0 or
+        len(state["retrieved_image_chunks"]) > 0
+    )
+    if not has_chunks:
         messages = [
             SystemMessage(content=RESPOND_GENERIC_PROMPT),
             HumanMessage(content=state["user_query"]),
@@ -137,25 +145,8 @@ def respond_node(state: AgentState) -> AgentState:
             **state,
             "draft_response": response.content,
             "final_response": response.content,
-            "response_status": "generic",
-            "sources": [],
-            "images": [],
-        }
-
-    # Caso 3: nessun chunk trovato sopra soglia (non si dovrebbe arrivare qua dato che graph blocca prima)
-    has_chunks = (
-        len(state["retrieved_chunks"]) > 0 or
-        len(state["retrieved_image_chunks"]) > 0
-    )
-    if not has_chunks:
-        return {
-            **state,
-            "draft_response": "",
-            "final_response": (
-                "I could not find any relevant documents to answer your question. "
-                "Please make sure the topic is covered in the loaded knowledge base."
-            ),
-            "response_status": "unknown",
+            "response_status": "complete",
+            "is_generic_cybersecurity": True,
             "sources": [],
             "images": [],
         }
@@ -174,6 +165,8 @@ def respond_node(state: AgentState) -> AgentState:
         "draft_response": response.content,
         "sources": _extract_sources(state),
         "images": _extract_images(state),
+        "is_generic_cybersecurity": False,
+        "is_off_topic": False,
         # final_response resta vuoto finché evaluate non dà l'ok
         "final_response": "",
         "response_status": "unknown",

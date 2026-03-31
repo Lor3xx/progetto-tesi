@@ -48,7 +48,6 @@ export default function Sidebar() {
 
 		} catch (err) {
 			// 🟡 backend spento → NON è errore UI
-			console.warn("[Sidebar] backend offline, nascondo conversazioni");
 			setStatus("error");
 
 			setConversations([]); // 👈 sidebar vuota

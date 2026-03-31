@@ -28,7 +28,7 @@ def evaluate_node(state: AgentState) -> AgentState:
 
     return {
         **state,
-        "eval_score": parsed.get("score", 0.0),
+        "eval_score": parsed.get("score", state["eval_score"]),
         "eval_reasoning": parsed.get("reasoning", ""),
         "missing_aspects": parsed.get("missing_aspects", []),
     }

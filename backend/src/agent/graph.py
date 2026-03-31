@@ -12,31 +12,14 @@ from config import settings
 
 # --- Funzioni di routing ---
 
-def route_after_enhance(state: AgentState) -> str:
-    """Dopo enhance: se generica o fuori contensto vai a rispondere, altrimenti recupera documenti."""
-    if state["is_generic_cybersecurity"] or state["is_off_topic"]:
-        return "respond"
-    return "retrieve"
-
-
-def route_after_retrieve(state: AgentState) -> str:
-    has_chunks = (
-        len(state["retrieved_chunks"]) > 0 or
-        len(state["retrieved_image_chunks"]) > 0
-    )
-    if has_chunks:
-        return "respond"
-    # nessun documento trovato → classifica prima di rispondere
-    return "classify"
-
-
 def route_after_classify(state: AgentState) -> str:
-    # entrambi i casi vanno a respond, che gestisce i flag
-    return "respond"
+    if state["is_off_topic"]:
+        return "respond"          
+    return "enhance"             
 
 
 def route_after_respond(state: AgentState) -> str:
-    if state["is_generic_cybersecurity"] or state["is_off_topic"]:
+    if state["is_off_topic"]:
         return "finalize"   # salta evaluate
     return "evaluate"
 
@@ -64,7 +47,10 @@ def finalize_node(state: AgentState) -> AgentState:
         **state,
         "final_response": state["draft_response"],
         "response_status": "complete",
-        "messages": [AIMessage(content=state["draft_response"])],
+        "messages": [
+            HumanMessage(content=state["user_query"]), 
+            AIMessage(content=state["draft_response"]),
+        ]
     }
 
 
@@ -82,7 +68,10 @@ def partial_node(state: AgentState) -> AgentState:
         **state,
         "final_response": state["draft_response"] + disclaimer,
         "response_status": "partial",
-        "messages": [AIMessage(content=state["draft_response"] + disclaimer)],
+        "messages": [
+            HumanMessage(content=state["user_query"]),
+            AIMessage(content=state["draft_response"] + disclaimer),
+        ],
     }
 
 
@@ -101,22 +90,23 @@ def build_graph(checkpointer: SqliteSaver) -> StateGraph:
     graph.add_node("partial", partial_node)
 
     # Entry point
-    graph.set_entry_point("enhance")
+    graph.set_entry_point("classify")
 
-    # Edge condizionale dopo enhance
+    # Edge dopo enhance
     graph.add_edge("enhance", "retrieve")
 
-    graph.add_edge("classify", "respond")
-
-    # Edge condizionale dopo retrieve
+    # Edge condizionale dopo classify
     graph.add_conditional_edges(
-        "retrieve",
-        route_after_retrieve,
+        "classify",
+        route_after_classify,
         {
+            "enhance": "enhance",
             "respond": "respond",
-            "classify": "classify",
         }
     )
+
+    # Edge dopo retrieve
+    graph.add_edge("retrieve","respond")
 
     # Edge condizionale dopo respond
     graph.add_conditional_edges(
