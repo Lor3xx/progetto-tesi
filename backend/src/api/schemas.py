@@ -12,11 +12,15 @@ class ImageResult(BaseModel):
     page: int
     description: str
 
+class SourceDocument(BaseModel):
+    content: str
+    metadata: dict[str, str]
+
 
 class ChatResponse(BaseModel):
     answer: str
     thread_id: str
-    sources: list[str]
+    sources: list[SourceDocument]
     images: list[ImageResult]
     status: str
     is_generic: bool

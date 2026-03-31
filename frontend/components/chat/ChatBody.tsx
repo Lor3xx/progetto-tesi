@@ -108,6 +108,8 @@ const ChatBody = () => {
             const data = await res.json();
             const elapsed = (performance.now() - t0) / 1000;
 
+            console.log(data.sources);
+
             if (data.thread_id) {
                 setThreadId(data.thread_id);
                 localStorage.setItem("chat_thread_id", data.thread_id);

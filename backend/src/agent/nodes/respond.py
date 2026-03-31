@@ -75,14 +75,24 @@ def _build_context_messages(state: AgentState) -> list:
     return content
 
 
-def _extract_sources(state: AgentState) -> list[str]:
-    """Raccoglie i nomi univoci dei documenti usati come fonti."""
-    sources = set()
-    for chunk in state["retrieved_chunks"]:
-        sources.add(chunk["document"].metadata.get("source", "unknown"))
-    for chunk in state["retrieved_image_chunks"]:
-        sources.add(chunk["document"].metadata.get("source", "unknown"))
-    return sorted(sources)
+def _extract_sources(state: AgentState) -> list[dict]:
+    seen = set()
+    sources = []
+    for chunk in state["retrieved_chunks"] + state["retrieved_image_chunks"]:
+        meta = chunk["document"].metadata
+        source = meta.get("source", "unknown")
+        page = meta.get("page", None)
+        key = (source, page)
+        if key not in seen:
+            seen.add(key)
+            sources.append({
+                "metadata": {
+                    "source": source,
+                    "page": str(page) if page is not None else "",
+                },
+                "content": chunk["document"].page_content[:300],
+            })
+    return sources
 
 
 def _extract_images(state: AgentState) -> list[ImageResult]:
