@@ -1,12 +1,6 @@
 "use client";
+import { InputBarProps } from "@/types";
 import { useEffect, useRef } from "react";
-
-interface InputBarProps {
-    onSubmit: (text: string) => void;
-    loading: boolean;
-    input: string;
-    setInput: (value: string) => void;
-}
 
 const InputBar = ({ onSubmit, loading, input, setInput }: InputBarProps) => {
     const inputRef = useRef<HTMLTextAreaElement>(null);

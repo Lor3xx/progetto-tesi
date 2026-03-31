@@ -43,3 +43,24 @@ export interface UploadResponse {
   status: string;
   message: string;
 }
+
+export interface Props {
+	conversation: ConversationPreview;
+	isActive: boolean;
+	onSelect: (threadId: string) => void;
+	onDelete: (threadId: string) => void;
+	onUpdateTitle: (threadId: string, title: string) => void;
+}
+
+export interface ConfirmDialogProps {
+    message: string;
+    onConfirm: () => void;
+    onCancel: () => void;
+}
+
+export interface InputBarProps {
+	onSubmit: (text: string) => void;
+	loading: boolean;
+	input: string;
+	setInput: (value: string) => void;
+}

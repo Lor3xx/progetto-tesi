@@ -1,5 +1,4 @@
 "use client";
-
 import { useRef, useState } from "react";
 import { UploadResponse } from "@/types";
 import { UploadIcon } from "./UploadIcon";

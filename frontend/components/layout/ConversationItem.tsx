@@ -1,14 +1,7 @@
 "use client";
-import { ConversationPreview } from "@/types";
+import { Props } from "@/types";
 import { useState } from "react";
-
-interface Props {
-	conversation: ConversationPreview;
-	isActive: boolean;
-	onSelect: (threadId: string) => void;
-	onDelete: (threadId: string) => void;
-	onUpdateTitle: (threadId: string, title: string) => void;
-}
+import ConfirmDialog from "./ConfirmDialog";
 
 function formatDate(isoString: string): string {
 	try {
@@ -28,10 +21,9 @@ function formatDate(isoString: string): string {
 export default function ConversationItem({ conversation, isActive, onSelect, onDelete, onUpdateTitle }: Props) {
 	const [isEditing, setIsEditing] = useState(false);
 	const [editedTitle, setEditedTitle] = useState(conversation.title);
+	const [showConfirm, setShowConfirm] = useState(false);
 
-	const handleDelete = () => {
-		if (confirm("Eliminare questa conversazione?")) onDelete(conversation.thread_id);
-	};
+	const handleDelete = () => setShowConfirm(true);
 
 	const handleEdit = () => {
 		setIsEditing(true);
@@ -119,6 +111,14 @@ export default function ConversationItem({ conversation, isActive, onSelect, onD
 					</svg>
 				</button>
 			</div>
+
+			{showConfirm && (
+			<ConfirmDialog
+				message="Eliminare questa conversazione? L'operazione non è reversibile."
+				onConfirm={() => { setShowConfirm(false); onDelete(conversation.thread_id); }}
+				onCancel={() => setShowConfirm(false)}
+			/>
+			)}
 		</div>
 	);
 }
