@@ -50,3 +50,4 @@ pymupdf4llm
 pillow
 msgpack
 python-multipart
+langchain-chroma

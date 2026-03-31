@@ -239,6 +239,7 @@ dependencies = [
     { name = "jq" },
     { name = "langchain" },
     { name = "langchain-astradb" },
+    { name = "langchain-chroma" },
     { name = "langchain-community" },
     { name = "langchain-experimental" },
     { name = "langchain-google-genai" },
@@ -285,6 +286,7 @@ requires-dist = [
     { name = "jq", specifier = ">=1.11.0" },
     { name = "langchain", specifier = ">=1.2.13" },
     { name = "langchain-astradb", specifier = ">=1.0.0" },
+    { name = "langchain-chroma", specifier = ">=1.1.0" },
     { name = "langchain-community", specifier = ">=0.4.1" },
     { name = "langchain-experimental", specifier = ">=0.4.1" },
     { name = "langchain-google-genai", specifier = ">=4.2.1" },
@@ -1953,6 +1955,20 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/b9/64/31e1e93c42e773fab6346dd2f304ec58c1f06debeb008efbddedd1b68345/langchain_astradb-1.0.0.tar.gz", hash = "sha256:23686094c74802862e92fb45141f89092472bfdedb373bfd8b748d4caeecc11f", size = 91755, upload-time = "2025-10-23T10:43:47.472Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/70/b6/f68f71c95a8dc80540dff7e24406e312f733b014671a64ace7221f7fcb5c/langchain_astradb-1.0.0-py3-none-any.whl", hash = "sha256:867f07e3e328d48fc79243e336197695d2b1d79f6c5d161385322172eb7cb4fb", size = 60089, upload-time = "2025-10-23T10:43:46.278Z" },
+]
+
+[[package]]
+name = "langchain-chroma"
+version = "1.1.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "chromadb" },
+    { name = "langchain-core" },
+    { name = "numpy" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/fa/0e/54896830b7331c90788cf96b2c37858977c199da9ecdaf85cf11eb6e6bc1/langchain_chroma-1.1.0.tar.gz", hash = "sha256:8069685e7848041e998d16c8a4964256b031fd20551bf59429173415bc2adc12", size = 220382, upload-time = "2025-12-12T16:23:01.399Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/ae/35/2a6d1191acaad043647e28313b0ecd161d61f09d8be37d1996a90d752c13/langchain_chroma-1.1.0-py3-none-any.whl", hash = "sha256:ff65e4a2ccefb0fb9fde2ff38705022ace402f979d557f018f6e623f7288f0fc", size = 12981, upload-time = "2025-12-12T16:23:00.196Z" },
 ]
 
 [[package]]
