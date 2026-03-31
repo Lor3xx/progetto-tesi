@@ -118,7 +118,6 @@ async def chat(request: ChatRequest):
         is_off_topic=False,
         query_category="unknown",
         response_status="unknown",
-        messages=[],
     )
 
     config = {"configurable": {"thread_id": thread_id}}
@@ -135,7 +134,7 @@ async def chat(request: ChatRequest):
     print(f"Enhanced query: {result['enhanced_query']}")
     print(f"Eval score    : {result['eval_score']:.2f}")
     print(f"Retry count   : {result['retry_count']}")
-    print(f"Sources       : {result['sources']}")
+    print(f"Sources       : {len(result['sources'])}")
     print(f"Images found  : {len(result['images'])}")
 
     return ChatResponse(

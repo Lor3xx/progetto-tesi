@@ -67,8 +67,6 @@ def _build_context_messages(state: AgentState) -> list:
         "text": (
             f"USER QUESTION: {state['user_query']}\n\n"
             "Answer based strictly on the context above. "
-            "Cite sources explicitly. "
-            "If you are using an image, say so."
         )
     })
 
@@ -124,7 +122,8 @@ def respond_node(state: AgentState) -> AgentState:
     # Caso 1: domanda off topic
     if state["is_off_topic"]:
         messages = [
-            SystemMessage(content=RESPOND_OFFTOPIC_PROMPT), 
+            SystemMessage(content=RESPOND_OFFTOPIC_PROMPT),
+            *state["messages"],  # cronologia messaggi precedente
             HumanMessage(content=state["user_query"])
         ]
         response = llm.invoke(messages)
@@ -148,6 +147,7 @@ def respond_node(state: AgentState) -> AgentState:
     if not has_chunks:
         messages = [
             SystemMessage(content=RESPOND_GENERIC_PROMPT),
+            *state["messages"],  # cronologia messaggi precedente
             HumanMessage(content=state["user_query"]),
         ]
         response = llm.invoke(messages)
@@ -165,6 +165,7 @@ def respond_node(state: AgentState) -> AgentState:
     content = _build_context_messages(state)
     messages = [
         SystemMessage(content=RESPOND_SYSTEM_PROMPT),
+        *state["messages"],  # cronologia messaggi precedente
         HumanMessage(content=content),
     ]
 
