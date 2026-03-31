@@ -34,3 +34,12 @@ export interface ConversationListResponse {
   conversations: ConversationPreview[];
   total: number;
 }
+
+
+export interface UploadResponse {
+  filename: string;
+  saved_as: string;
+  size_bytes: number;
+  status: string;
+  message: string;
+}

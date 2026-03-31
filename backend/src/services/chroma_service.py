@@ -25,7 +25,7 @@ def add_documents(docs: list) -> list[str]:
 
 def similarity_search(query: str, k: int | None = None) -> list:
     """
-    Cerca i documenti più simili alla query.
+    Cerca i documenti più simili alla query tra quelli della knowledge base.
     Restituisce una lista di Document con score di rilevanza.
     """
     top_k = k or settings.retrieval_top_k
@@ -41,3 +41,29 @@ def document_exists(source: str) -> bool:
     """
     result = vector_store.get(where={"source": source})
     return len(result["ids"]) > 0
+
+
+def similarity_search_prioritized(query: str, k: int | None = None) -> list:
+    """
+    Ricerca su tutta la collection con boost per i documenti utente.
+    Recupera più risultati del necessario, applica il boost, riordina e taglia a k.
+    """
+    top_k = k or settings.retrieval_top_k
+
+    # Recupera più risultati del necessario per avere margine dopo il riordino
+    candidates = vector_store.similarity_search_with_relevance_scores(
+        query,
+        k=top_k * 3,
+    )
+
+    # Applica boost ai documenti utente
+    boosted = []
+    for doc, score in candidates:
+        if doc.metadata.get("uploaded_by") == "user":
+            boosted.append((doc, min(score + settings.user_boost, 1.0)))
+        else:
+            boosted.append((doc, score))
+
+    # Riordina per score decrescente e taglia a k
+    boosted.sort(key=lambda x: x[1], reverse=True)
+    return boosted[:top_k]

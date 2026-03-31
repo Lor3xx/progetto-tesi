@@ -18,6 +18,7 @@ from agent.graph import build_graph
 from langgraph.checkpoint.sqlite import SqliteSaver
 
 from src.api.conversations import router as conversations_router
+from src.api.documents import router as documents_router
 
 
 # ─── Global state ─────────────────────────────────────────────────────────────
@@ -62,6 +63,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(title="RAG Cybersecurity API", version="1.0.0", lifespan=lifespan)
 
 app.include_router(conversations_router)
+app.include_router(documents_router)
 
 app.add_middleware(
     CORSMiddleware,

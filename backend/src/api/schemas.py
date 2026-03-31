@@ -47,3 +47,14 @@ class ConversationListResponse(BaseModel):
 
 class TitleUpdate(BaseModel):
     new_title: str
+
+class UploadResponse(BaseModel):
+    filename:   str
+    saved_as:   str | None   # None se rifiutato prima del salvataggio
+    size_bytes: int
+    status:     str          # uploaded | duplicate | rejected | error
+    message:    str
+    # campi extra solo in caso di successo
+    chunks_ingested: int | None = None
+    validation_score: float | None = None
+    validation_method: str | None = None

@@ -67,7 +67,7 @@ html, body {
 .header-title { font-size: 1.1rem; font-weight: 600; letter-spacing: -0.02em; }
 .header-sub { font-size: 0.78rem; color: var(--text-muted); margin-top: 1px; }
 .status-badge {
-	margin-left: auto;
+	margin-left: 0;
 	font-size: 0.72rem;
 	font-family: var(--font-mono);
 	padding: 4px 10px;
@@ -78,6 +78,68 @@ html, body {
 .status-ready  { color: var(--success); border-color: var(--success); background: #0d2b20; }
 .status-error  { color: var(--danger);  border-color: var(--danger);  background: #2b0d0d; }
 .status-unknown{ color: var(--text-muted); border-color: var(--border); background: transparent; }
+
+
+/* ── UploadButton ────────────────────────────────────────────────── */
+.upload-wrapper {
+	display: flex;
+	margin-left: auto;
+	align-items: center;
+	gap: 10px;
+}
+
+.upload-btn {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	padding: 5px 13px;
+	border-radius: 8px;
+	border: 1px solid var(--border);
+	background: transparent;
+	color: var(--text-muted);
+	font-family: var(--font-sans);
+	font-size: 0.78rem;
+	font-weight: 500;
+	cursor: pointer;
+	transition: background 0.15s, border-color 0.15s, color 0.15s;
+	white-space: nowrap;
+}
+
+.upload-btn:hover:not(:disabled) {
+	background: var(--surface2);
+	border-color: var(--accent);
+	color: var(--accent);
+}
+
+.upload-btn:disabled,
+.upload-btn--loading {
+	opacity: 0.55;
+	cursor: not-allowed;
+}
+
+.upload-spinner {
+	animation: upload-spin 0.75s linear infinite;
+}
+
+@keyframes upload-spin {
+	to { transform: rotate(360deg); }
+}
+
+/* Feedback pill */
+.upload-feedback {
+	font-size: 0.72rem;
+	font-family: var(--font-mono);
+	flex: 1;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.upload-feedback--success  { color: var(--success); }
+.upload-feedback--duplicate{ color: var(--text-muted); }
+.upload-feedback--error    { color: var(--danger); }
+.upload-feedback--uploading{ color: var(--text-muted); }
 
 
 .chat-body {

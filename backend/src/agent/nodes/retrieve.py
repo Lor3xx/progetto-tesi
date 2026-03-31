@@ -1,10 +1,10 @@
 from config import settings
-from services.chroma_service import similarity_search
+from services.chroma_service import similarity_search_prioritized
 from agent.state import AgentState, RetrievedChunk
 
 def retrieve_node(state: AgentState) -> AgentState:
     query = state["enhanced_query"]
-    results = similarity_search(query, k=settings.retrieval_top_k)
+    results = similarity_search_prioritized(query, k=settings.retrieval_top_k)
 
     text_chunks: list[RetrievedChunk] = []
     image_chunks: list[RetrievedChunk] = []
