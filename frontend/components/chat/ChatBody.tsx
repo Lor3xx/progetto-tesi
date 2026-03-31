@@ -41,13 +41,14 @@ const ChatBody = () => {
             const data = await r.json();
             console.log("[fetchHistory] raw messages:", data.messages);
             const loaded: Message[] = data.messages.map(
-                (m: { role: string; content: string }) => ({
+                (m: { role: string; content: string; timestamp: string }) => ({
                     id: uid(),
                     role: m.role as "user" | "assistant",
                     text: m.content,
-                    timestamp: new Date(),
+                    timestamp: m.timestamp ? new Date(m.timestamp) : new Date(),
                 })
             );
+            console.log("[fetchHistory] loaded messages:", loaded);
             setMessages(loaded);
         } catch {
             localStorage.removeItem("chat_thread_id");
@@ -108,7 +109,7 @@ const ChatBody = () => {
             const data = await res.json();
             const elapsed = (performance.now() - t0) / 1000;
 
-            console.log(data.sources);
+            //console.log(data.sources);
 
             if (data.thread_id) {
                 setThreadId(data.thread_id);

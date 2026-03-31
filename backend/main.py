@@ -161,12 +161,14 @@ async def get_history(thread_id: str):
         raise HTTPException(status_code=404, detail="Conversazione non trovata")
 
     messages = state.values.get("messages", [])
+    timestamps = state.values.get("message_timestamp", [])
     history = [
         {
             "role": "user" if msg.__class__.__name__ == "HumanMessage" else "assistant",
             "content": msg.content,
+            "timestamp": timestamps[i] if i < len(timestamps) else None
         }
-        for msg in messages
+        for i, msg in enumerate(messages)
     ]
 
     return {"thread_id": thread_id, "messages": history}

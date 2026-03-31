@@ -41,7 +41,8 @@ class AgentState(TypedDict):
     final_response: str                      # risposta finale approvata
     sources: list[str]                       # nomi dei documenti usati (citazioni)
     images: list[ImageResult]               # immagini da mostrare al frontend
-
+    message_timestamp: list[str]
+    
     # --- Flag di controllo del flusso ---
     is_generic_cybersecurity: bool          # True → può rispondere senza documenti
     is_off_topic: bool                     # True → domanda fuori contesto, non risponde

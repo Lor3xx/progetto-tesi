@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 from langgraph.graph import StateGraph, END
 from langgraph.checkpoint.sqlite import SqliteSaver
 from langchain_core.messages import HumanMessage, SystemMessage, AIMessage  
@@ -43,6 +45,7 @@ def route_after_evaluate(state: AgentState) -> str:
 
 def finalize_node(state: AgentState) -> AgentState:
     """Promuove la bozza a risposta finale."""
+    now = datetime.now(timezone.utc).isoformat()
     return {
         **state,
         "final_response": state["draft_response"],
@@ -50,7 +53,8 @@ def finalize_node(state: AgentState) -> AgentState:
         "messages": [
             HumanMessage(content=state["user_query"]), 
             AIMessage(content=state["draft_response"]),
-        ]
+        ],
+        "message_timestamp": state.get("message_timestamp", []) + [now, now],
     }
 
 
@@ -64,6 +68,7 @@ def partial_node(state: AgentState) -> AgentState:
         "Not all aspects of your question could be fully covered "
         "by the available documents."
     )
+    now = datetime.now(timezone.utc).isoformat()
     return {
         **state,
         "final_response": state["draft_response"] + disclaimer,
@@ -72,6 +77,7 @@ def partial_node(state: AgentState) -> AgentState:
             HumanMessage(content=state["user_query"]),
             AIMessage(content=state["draft_response"] + disclaimer),
         ],
+        "message_timestamp": state.get("message_timestamp", []) + [now, now],
     }
 
 

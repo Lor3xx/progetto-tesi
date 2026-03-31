@@ -114,8 +114,9 @@ export default function Sidebar() {
 				<button className="sidebar-new-btn" onClick={handleNewChat} title="Nuova chat">
 					<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
 						fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-						<path d="M12 20h9"/>
-						<path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"/>
+					<path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/>
+					<path d="M12 8v6"/>
+					<path d="M9 11h6"/>
 					</svg>
 				</button>
 			</div>
