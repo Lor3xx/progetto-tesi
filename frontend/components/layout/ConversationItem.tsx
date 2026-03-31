@@ -7,17 +7,18 @@ interface Props {
 	isActive: boolean;
 	onSelect: (threadId: string) => void;
 	onDelete: (threadId: string) => void;
-	onUpdateTitle: (id: string, title: string) => void;
+	onUpdateTitle: (threadId: string, title: string) => void;
 }
 
 function formatDate(isoString: string): string {
 	try {
 		const date = new Date(isoString);
 		const now = new Date();
-		const diffDays = Math.floor((now.getTime() - date.getTime()) / 86_400_000);
-		if (diffDays === 0) return "oggi";
-		if (diffDays === 1) return "ieri";
-		if (diffDays < 7)  return `${diffDays}g fa`;
+		var diffDays = (now.getTime() - date.getTime()) / 86_400_000;
+		if (diffDays < 0.7) return "oggi";
+		if (diffDays < 1.2) return "ieri";
+		diffDays = Math.round(diffDays);
+		if (diffDays < 7)  return `${diffDays}gg fa`;
 		return date.toLocaleDateString("it-IT", { day: "2-digit", month: "short" });
 	} catch {
 		return "";

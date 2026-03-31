@@ -43,7 +43,6 @@ def enhance_node(state: AgentState) -> AgentState:
 
     return {
         **state,
-        "messages": [HumanMessage(content=state["user_query"])],
         "enhanced_query": parsed.get("enhanced_query", state["user_query"]),
         "enhancement_reasoning": parsed.get("reasoning", ""),
         "missing_aspects": parsed.get("missing_aspects", []),

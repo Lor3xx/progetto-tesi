@@ -39,6 +39,7 @@ const ChatBody = () => {
                 return;
             }
             const data = await r.json();
+            console.log("[fetchHistory] raw messages:", data.messages);
             const loaded: Message[] = data.messages.map(
                 (m: { role: string; content: string }) => ({
                     id: uid(),

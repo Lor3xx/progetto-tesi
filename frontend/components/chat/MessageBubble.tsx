@@ -24,7 +24,7 @@ const MessageBubble = ({ msg }: { msg: Message }) => {
                     </p>
                     <div className="sources-list">
                         {msg.sources.map((s, i) => (
-                        <SourceCard key={i} doc={s} index={i} />
+                            <SourceCard key={i} doc={s} index={i} />
                         ))}
                     </div>
                     </div>

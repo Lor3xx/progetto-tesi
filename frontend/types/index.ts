@@ -14,7 +14,7 @@ export interface Message {
     id: string;
     role: "user" | "assistant";
     text: string;
-    sources?: string[];
+    sources?: SourceDocument[];
     images?: ImageResult[];
     status?: "complete" | "partial" | "unknown" | "off_topic";
     elapsed?: number;
