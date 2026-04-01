@@ -33,9 +33,8 @@ def _build_context_messages(state: AgentState) -> list:
             "text": f"DOCUMENT EXCERPTS:\n{chunks_text}"
         })
 
-    # --- Chunk immagini: descrizione + immagine base64 ---
+    # --- Chunk immagini: descrizione ---
     for img_chunk in state["retrieved_image_chunks"]:
-        img_path = img_chunk["document"].metadata.get("image_path", "")
         description = img_chunk["document"].page_content
         source = img_chunk["document"].metadata.get("source", "unknown")
         page = img_chunk["document"].metadata.get("page", "?")
@@ -49,18 +48,6 @@ def _build_context_messages(state: AgentState) -> list:
             )
         })
 
-        # Carica l'immagine reale in base64 solo se il file esiste
-        img_file = Path(img_path)
-        if img_file.exists():
-            with open(img_file, "rb") as f:
-                b64 = base64.b64encode(f.read()).decode()
-            ext = img_file.suffix.lstrip(".")
-            mime = "image/jpeg" if ext in ("jpg", "jpeg") else f"image/{ext}"
-            content.append({
-                "type": "image_url",
-                "image_url": {"url": f"data:{mime};base64,{b64}"}
-            })
-
     # --- Domanda utente ---
     content.append({
         "type": "text",
@@ -69,14 +56,15 @@ def _build_context_messages(state: AgentState) -> list:
             "Answer based strictly on the context above. "
         )
     })
-
+    print(f"\nReturning content")
     return content
 
 
 def _extract_sources(state: AgentState) -> list[dict]:
+    print(f"\nExtracting sources from {len(state['retrieved_chunks'])} text chunks")
     seen = set()
     sources = []
-    for chunk in state["retrieved_chunks"] + state["retrieved_image_chunks"]:
+    for chunk in state["retrieved_chunks"]:
         meta = chunk["document"].metadata
         source = meta.get("source", "unknown")
         page = meta.get("page", None)
@@ -90,13 +78,16 @@ def _extract_sources(state: AgentState) -> list[dict]:
                 },
                 "content": chunk["document"].page_content[:300],
             })
+    print(f"Extracted sources: {[s['metadata'] for s in sources]}")
     return sources
 
 
 def _extract_images(state: AgentState) -> list[ImageResult]:
     """Costruisce la lista ImageResult per le immagini da mostrare al frontend."""
+    print(f"\nExtracting images from {len(state['retrieved_image_chunks'])} image chunks.")
     images: list[ImageResult] = []
     for img_chunk in state["retrieved_image_chunks"]:
+        print(f"Extracting image from path {img_chunk['document'].metadata.get('image_path', '')}")
         meta = img_chunk["document"].metadata
         img_path = meta.get("image_path", "")
         if Path(img_path).exists():
@@ -114,8 +105,7 @@ def respond_node(state: AgentState) -> AgentState:
     Nodo di risposta principale.
     Gestisce quattro casi:
     - off-topic: risponde che non può rispondere a domande fuori contesto
-    - generic: risponde senza documenti
-    - no_documents: comunica che non ci sono fonti pertinenti
+    - generic: nessun documento trovato, risponde senza documenti
     - rag: costruisce risposta da chunk testuali e immagini
     """
 
@@ -134,12 +124,8 @@ def respond_node(state: AgentState) -> AgentState:
             "sources": [],
             "images": [],
         }
-
-    # Caso 2: domanda generica cybersecurity, nessun documento necessario
     
-        
-
-    # Caso 3: nessun chunk trovato sopra soglia, domanda generica
+    # Caso 2: nessun chunk trovato sopra soglia, domanda generica
     has_chunks = (
         len(state["retrieved_chunks"]) > 0 or
         len(state["retrieved_image_chunks"]) > 0
@@ -161,15 +147,16 @@ def respond_node(state: AgentState) -> AgentState:
             "images": [],
         }
 
-    # Caso 4: RAG normale con chunk e immagini
+    # Caso 3: RAG normale con chunk e immagini
     content = _build_context_messages(state)
     messages = [
         SystemMessage(content=RESPOND_SYSTEM_PROMPT),
         *state["messages"],  # cronologia messaggi precedente
         HumanMessage(content=content),
     ]
-
+    print(f"\nInvoking LLM with {len(messages)} messages, including {len(state['retrieved_chunks'])} text chunks and {len(state['retrieved_image_chunks'])} image chunks.")
     response = llm.invoke(messages)
+    print(f"\nReturning response")
 
     return {
         **state,
@@ -178,7 +165,7 @@ def respond_node(state: AgentState) -> AgentState:
         "images": _extract_images(state),
         "is_generic_cybersecurity": False,
         "is_off_topic": False,
-        # final_response resta vuoto finché evaluate non dà l'ok
+        # final_response resta vuoto finché evaluate non da l'ok
         "final_response": "",
         "response_status": "unknown",
     }

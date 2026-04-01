@@ -10,6 +10,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
+from fastapi.staticfiles import StaticFiles
 
 sys.path.append(str(Path(__file__).parent / "src"))
 
@@ -65,6 +66,8 @@ app = FastAPI(title="RAG Cybersecurity API", version="1.0.0", lifespan=lifespan)
 app.include_router(conversations_router)
 app.include_router(documents_router)
 
+app.mount("/images", StaticFiles(directory="data/images"), name="images")
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000"],
@@ -87,6 +90,9 @@ async def health():
 
 @app.post("/chat", response_model=ChatResponse)
 async def chat(request: ChatRequest):
+    print(f"*" * 50)
+    print(f"*" * 50)
+    print(f"Received query: {request.message[:100]}")
     if not rag_graph:
         raise HTTPException(status_code=503, detail="Sistema non ancora pronto")
 
@@ -128,14 +134,22 @@ async def chat(request: ChatRequest):
         raise HTTPException(status_code=500, detail=f"Errore nel grafo: {str(e)}")
 
     #print di debug
+    print(f"=" * 50)
     print(f"Status        : {result['response_status']}")
     print(f"Is generic    : {result['is_generic_cybersecurity']}")
     print(f"Is off-topic  : {result['is_off_topic']}")
+    print(f"Classify reasoning: {result['classify_reasoning']}")
     print(f"Enhanced query: {result['enhanced_query']}")
+    print(f"Enhancement reasoning: {result['enhancement_reasoning']}")
     print(f"Eval score    : {result['eval_score']:.2f}")
+    print(f"Eval reasoning: {result['eval_reasoning']}")
     print(f"Retry count   : {result['retry_count']}")
-    print(f"Sources       : {len(result['sources'])}")
+    print(f"Retrieved chunks: {len(result['retrieved_chunks'])}")
+    print(f"Retrieved image chunks: {len(result['retrieved_image_chunks'])}")
+    print(f"Sources       : {result['sources']}")
     print(f"Images found  : {len(result['images'])}")
+    print(f"Draft response : {result['draft_response'][:500]}...")
+    print(f"=" * 50)
 
     return ChatResponse(
         answer=result["final_response"],

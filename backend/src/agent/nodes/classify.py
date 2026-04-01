@@ -22,9 +22,11 @@ def classify_node(state: AgentState) -> AgentState:
             **state,
             "is_generic_cybersecurity": False,
             "is_off_topic": False,
+            "classify_reasoning": "Parsing JSON fallito, classificazione di default a specifica."
         }
     
     return {
         **state,
         "is_off_topic": parsed.get("is_off_topic", False),
+        "classify_reasoning": parsed.get("classify_reasoning", "No reasoning provided")
     }

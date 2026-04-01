@@ -147,7 +147,7 @@ def get_images_for_chunks(chunk_ids: list[str], images_base_dir: Path) -> list[d
     seen_files: set[str] = set()
 
     # Scansiona tutti i manifest presenti
-    for manifest_path in images_base_dir.glob("*/manifest.json"):
+    for manifest_path in images_base_dir.glob("*/registry.json"):
         with open(manifest_path, "r", encoding="utf-8") as f:
             manifest = json.load(f)
 

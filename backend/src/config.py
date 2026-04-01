@@ -28,6 +28,7 @@ class Settings(BaseSettings):
     user_boost: float = 0.15 # bonus score per i documenti caricati dall'utente
     min_eval_chunk_score: float = 0.5 #soglia per considerare un chunk rilevante e usarlo nella risposta
     min_eval_score: float = 0.7 #soglia minima per accettare la risposta del modello senza retry
+    min_image_score: float = 0.25 #soglia più bassa per includere immagini, anche se meno rilevanti
     max_retries: int = 2
 
     # Accettazione nuovi documenti

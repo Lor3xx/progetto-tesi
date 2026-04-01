@@ -22,6 +22,11 @@ class AgentState(TypedDict):
     # --- Input iniziale ---
     user_query: str                          # domanda originale dell'utente
 
+    # --- Classify ---
+    is_generic_cybersecurity: bool          # True se domanda generica su cybersecurity
+    is_off_topic: bool                     # True se domanda fuori contesto
+    classify_reasoning: str                      # motivazione del classificatore
+
     # --- Query enhancement ---
     enhanced_query: str                      # query migliorata con keywords
     enhancement_reasoning: str              # perché è stata modificata così
@@ -44,8 +49,6 @@ class AgentState(TypedDict):
     message_timestamp: list[str]
     
     # --- Flag di controllo del flusso ---
-    is_generic_cybersecurity: bool          # True → può rispondere senza documenti
-    is_off_topic: bool                     # True → domanda fuori contesto, non risponde
     query_category: str                         # "specific" | "generic_cyber" | "off_topic"
     response_status: str                    # "complete" | "partial" | "unknown"
 

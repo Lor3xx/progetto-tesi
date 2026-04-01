@@ -295,6 +295,36 @@ html, body {
 	30%            { transform: translateY(-6px); }
 }
 
+/* ── ImageCard ───────────────────────────────────────────────────── */
+.image-card-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    gap: 8px;
+}
+
+.image-card-img {
+    width: auto;
+    max-width: 80%;
+    max-height: 300px;
+    object-fit: contain;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+}
+
+.image-card-desc {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+    white-space: pre-wrap;
+    text-align: center;
+}
+
+.image-card-desc--hidden {
+    display: none;
+}
+
 /* ── Sources ────────────────────────────────────────────────────── */
 .sources-section { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border); }
 .sources-label {

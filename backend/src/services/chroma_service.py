@@ -67,3 +67,11 @@ def similarity_search_prioritized(query: str, k: int | None = None) -> list:
     # Riordina per score decrescente e taglia a k
     boosted.sort(key=lambda x: x[1], reverse=True)
     return boosted[:top_k]
+
+def similarity_search_images(query: str, k: int = 3) -> list:
+    """Cerca specificamente tra i chunk image_description."""
+    return vector_store.similarity_search_with_relevance_scores(
+        query,
+        k=k,
+        filter={"chunk_type": "image_description"},
+    )

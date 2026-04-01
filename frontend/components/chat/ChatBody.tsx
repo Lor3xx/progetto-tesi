@@ -118,7 +118,7 @@ const ChatBody = () => {
             const data = await res.json();
             const elapsed = (performance.now() - t0) / 1000;
 
-            //console.log(data.sources);
+            console.log("Sources", data.sources);
 
             if (data.thread_id) {
                 setThreadId(data.thread_id);
@@ -141,7 +141,8 @@ const ChatBody = () => {
             };
             setMessages((prev) => [...prev, assistantMsg]);
 
-        } catch {
+        } catch (e) {
+            console.log("Errore nel caricamento:", e);
             setMessages((prev) => [...prev, {
                 id: uid(),
                 role: "assistant",
