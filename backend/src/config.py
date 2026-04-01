@@ -9,7 +9,8 @@ class Settings(BaseSettings):
     # Groq
     groq_api_key: str = os.getenv("GROQ_API_KEY")
     groq_eval_model: str = "llama-3.1-8b-instant"  # veloce e leggero
-    groq_llm_model: str = "llama-3.3-70b-versatile"  # solo per risposta finale
+    #groq_llm_model: str = "llama-3.3-70b-versatile"  # solo per risposta finale
+    groq_llm_model: str = "meta-llama/llama-4-scout-17b-16e-instruct" # alternativa se finisco token
     groq_vision_model: str = "meta-llama/llama-4-scout-17b-16e-instruct"
     
     # HuggingFace Embeddings
@@ -26,7 +27,7 @@ class Settings(BaseSettings):
     # Logica agente
     retrieval_top_k: int = 8
     user_boost: float = 0.15 # bonus score per i documenti caricati dall'utente
-    min_eval_chunk_score: float = 0.5 #soglia per considerare un chunk rilevante e usarlo nella risposta
+    min_eval_chunk_score: float = 0.3 #soglia per considerare un chunk rilevante e usarlo nella risposta
     min_eval_score: float = 0.7 #soglia minima per accettare la risposta del modello senza retry
     min_image_score: float = 0.25 #soglia più bassa per includere immagini, anche se meno rilevanti
     max_retries: int = 2

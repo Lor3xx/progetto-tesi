@@ -22,7 +22,7 @@ def add_documents(docs: list) -> list[str]:
     ids = vector_store.add_documents(docs)
     return ids
 
-
+# Legacy
 def similarity_search(query: str, k: int | None = None) -> list:
     """
     Cerca i documenti più simili alla query tra quelli della knowledge base.

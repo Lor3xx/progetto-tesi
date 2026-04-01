@@ -1,6 +1,6 @@
 "use client";
 import { useState, useRef, useEffect, useCallback } from "react";
-import { Message } from "@/types";
+import { ImageResult, Message, SourceDocument } from "@/types";
 import InputBar from "../layout/InputBar";
 import MessageList from "./MessageList";
 import TypingIndicator from "./TypingIndicator";
@@ -50,10 +50,12 @@ const ChatBody = () => {
             const data = await r.json();
             console.log("[fetchHistory] raw messages:", data.messages);
             const loaded: Message[] = data.messages.map(
-                (m: { role: string; content: string; timestamp: string }) => ({
+                (m: { role: string; content: string; timestamp: string; sources: SourceDocument[]; images: ImageResult[] }) => ({
                     id: uid(),
                     role: m.role as "user" | "assistant",
                     text: m.content,
+                    sources: m.sources ?? [],
+                    images: m.images ?? [],
                     timestamp: m.timestamp ? new Date(m.timestamp) : new Date(),
                 })
             );

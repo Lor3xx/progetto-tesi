@@ -131,6 +131,7 @@ async def chat(request: ChatRequest):
     try:
         result = rag_graph.invoke(initial_state, config=config)
     except Exception as e:
+        print(f"Error invoking graph: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Errore nel grafo: {str(e)}")
 
     #print di debug
@@ -176,12 +177,13 @@ async def get_history(thread_id: str):
         raise HTTPException(status_code=404, detail="Conversazione non trovata")
 
     messages = state.values.get("messages", [])
-    timestamps = state.values.get("message_timestamp", [])
     history = [
         {
             "role": "user" if msg.__class__.__name__ == "HumanMessage" else "assistant",
             "content": msg.content,
-            "timestamp": timestamps[i] if i < len(timestamps) else None
+            "sources": msg.metadata.get("sources", []) if hasattr(msg, "metadata") else [],
+            "images": msg.metadata.get("images", []) if hasattr(msg, "metadata") else [],
+            "timestamp": msg.metadata.get("timestamp", "") if hasattr(msg, "metadata") else "",
         }
         for i, msg in enumerate(messages)
     ]

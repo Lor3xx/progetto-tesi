@@ -51,10 +51,19 @@ def finalize_node(state: AgentState) -> AgentState:
         "final_response": state["draft_response"],
         "response_status": "complete",
         "messages": [
-            HumanMessage(content=state["user_query"]), 
-            AIMessage(content=state["draft_response"]),
+            HumanMessage(
+                content=state["user_query"],
+                metadata={"timestamp": now}
+            ), 
+            AIMessage(
+                content=state["draft_response"],
+                metadata={
+                    "timestamp": now,
+                    "sources": state["sources"],
+                    "images": state["images"],
+                }
+            ),
         ],
-        "message_timestamp": state.get("message_timestamp", []) + [now, now],
     }
 
 
@@ -74,10 +83,16 @@ def partial_node(state: AgentState) -> AgentState:
         "final_response": state["draft_response"] + disclaimer,
         "response_status": "partial",
         "messages": [
-            HumanMessage(content=state["user_query"]),
-            AIMessage(content=state["draft_response"] + disclaimer),
+            HumanMessage(content=state["user_query"], metadata={"timestamp": now}),
+            AIMessage(
+                content=state["draft_response"] + disclaimer,
+                metadata={
+                    "timestamp": now,
+                    "sources": state["sources"],
+                    "images": state["images"],
+                }
+            ),
         ],
-        "message_timestamp": state.get("message_timestamp", []) + [now, now],
     }
 
 

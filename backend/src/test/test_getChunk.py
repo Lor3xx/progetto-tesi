@@ -3,6 +3,12 @@ from services.chroma_service import similarity_search_prioritized, similarity_se
 query = [
     "Adversarial Attacks on XAI",
     "Multiplicative uplift in total risk across model scenarios and AI capability levels.",
+    "cos'è il grey-box adversary?",
+    "what is Adversarial Model?",
+    "what is RENNERVATE?",
+    "come funziona TVLA?",
+    "cos'è SiamXBERT?",
+    "Context-Aware Phishing Email Detection"
 ]
 
 
