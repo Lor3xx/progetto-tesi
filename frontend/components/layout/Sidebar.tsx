@@ -111,7 +111,12 @@ export default function Sidebar() {
 		<aside className="sidebar">
 			<div className="sidebar-header">
 				<span className="sidebar-title">Cronologia</span>
-				<button className="sidebar-new-btn" onClick={handleNewChat} title="Nuova chat">
+				<button 
+					className="sidebar-new-btn" 
+					onClick={handleNewChat} 
+					title="Nuova chat"
+					disabled={status === "error"} 
+				>
 					<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
 						fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
 					<path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/>

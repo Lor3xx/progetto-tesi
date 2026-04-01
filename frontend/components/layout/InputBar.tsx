@@ -2,7 +2,7 @@
 import { InputBarProps } from "@/types";
 import { useEffect, useRef } from "react";
 
-const InputBar = ({ onSubmit, loading, input, setInput }: InputBarProps) => {
+const InputBar = ({ onSubmit, loading, input, setInput, online }: InputBarProps) => {
     const inputRef = useRef<HTMLTextAreaElement>(null);
 
     // Auto-resize textarea
@@ -17,6 +17,9 @@ const InputBar = ({ onSubmit, loading, input, setInput }: InputBarProps) => {
         const q = input.trim();
         if (!q || loading) return;
         onSubmit(q);
+        setTimeout(() => {
+            inputRef.current?.focus();
+        }, 0);
     };
 
     const handleKey = (e: React.KeyboardEvent) => {
@@ -36,12 +39,13 @@ const InputBar = ({ onSubmit, loading, input, setInput }: InputBarProps) => {
                     onKeyDown={handleKey}
                     placeholder="Scrivi la tua domanda…"
                     rows={1}
-                    disabled={loading}
+                    readOnly={loading}
+                    disabled={!online}
                 />
                 <button
                     className="send-btn"
                     onClick={handleSubmit}
-                    disabled={loading || !input.trim()}
+                    disabled={loading || !input.trim() || !online}
                     aria-label="Invia"
                 >
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">

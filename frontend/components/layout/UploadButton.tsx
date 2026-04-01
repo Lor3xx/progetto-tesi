@@ -8,7 +8,7 @@ const API_BASE = process.env.NEXT_PUBLIC_RAG_API_URL ?? "http://localhost:8000";
 
 type UploadStatus = "idle" | "uploading" | "success" | "duplicate" | "error";
 
-export default function UploadButton() {
+export default function UploadButton({ apiStatus }: { apiStatus: "unknown" | "ready" | "error" }) {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [status, setStatus] = useState<UploadStatus>("idle");
     const [message, setMessage] = useState("");
@@ -82,7 +82,7 @@ export default function UploadButton() {
             <button
                 className={`upload-btn${isUploading ? " upload-btn--loading" : ""}`}
                 onClick={() => fileInputRef.current?.click()}
-                disabled={isUploading}
+                disabled={isUploading || apiStatus !== "ready"}
                 title="Carica un documento PDF"
             >
                 {isUploading ? <SpinnerIcon /> : <UploadIcon />}

@@ -22,6 +22,15 @@ const ChatBody = () => {
         return null;
     });
     const bottomRef = useRef<HTMLDivElement>(null);
+    const [apiStatus, setApiStatus] = useState<"unknown" | "ready" | "error">("unknown");
+        
+    // ── Health check ──────────────────────────────────────────────────────────
+    useEffect(() => {
+        fetch(`${API_BASE}/health`)
+        .then((r) => r.json())
+        .then((d) => setApiStatus(d.status === "ready" ? "ready" : "error"))
+        .catch(() => setApiStatus("error"));
+    }, []);
 
     useEffect(() => {
         bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -82,7 +91,7 @@ const ChatBody = () => {
 
     // ── Invio messaggio ───────────────────────────────────────────────────────
     const submit = useCallback(async (text: string) => {
-        if (loading) return;
+        if (loading || apiStatus !== "ready") return;
 
         const userMsg: Message = {
             id: uid(),
@@ -147,15 +156,33 @@ const ChatBody = () => {
     return (
         <div className="chat-body">
             <div className="chat-area">
-                <MessageList messages={messages} />
-                {loading && <TypingIndicator />}
-                <div ref={bottomRef} />
+                {apiStatus !== "ready" ? (
+                    <div className="offline-state">
+                        <div className="offline-bubble">
+                            <svg className="offline-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M20 17.5a4.5 4.5 0 0 0-1-8.9 6 6 0 0 0-11.5 1.5A4 4 0 0 0 6 18h14z"/>
+                                <path d="M4 4l16 16"/>
+                            </svg>
+
+                            <span>Backend non disponibile</span>
+                        </div>
+                    </div>
+                ) : (
+                    <>
+                        <MessageList messages={messages} />
+                        {loading && <TypingIndicator />}
+                        <div ref={bottomRef} />
+                    </>
+                )}
             </div>
+
             <InputBar
                 onSubmit={submit}
                 loading={loading}
                 input={input}
                 setInput={setInput}
+                online={apiStatus === "ready"}
             />
         </div>
     );

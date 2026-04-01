@@ -23,7 +23,7 @@ const Navbar = () => {
 				<div className="header-sub">Interroga i tuoi documenti con l'AI</div>
 			</div>
 
-            <UploadButton />
+            <UploadButton apiStatus={apiStatus} />
 
 			<span className={`status-badge status-${apiStatus}`}>
 				{apiStatus === "ready" ? "● online" : apiStatus === "error" ? "● offline" : "● …"}

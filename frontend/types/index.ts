@@ -63,4 +63,5 @@ export interface InputBarProps {
 	loading: boolean;
 	input: string;
 	setInput: (value: string) => void;
+  online: boolean;
 }
