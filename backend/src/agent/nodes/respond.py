@@ -103,14 +103,14 @@ def _extract_images(state: AgentState) -> list[ImageResult]:
 def respond_node(state: AgentState) -> AgentState:
     """
     Nodo di risposta principale.
-    Gestisce quattro casi:
+    Gestisce tre casi:
     - off-topic: risponde che non può rispondere a domande fuori contesto
     - generic: nessun documento trovato, risponde senza documenti
     - rag: costruisce risposta da chunk testuali e immagini
     """
 
     # Caso 1: domanda off topic
-    if state["is_off_topic"]:
+    if state["is_off_topic"] and not state["is_specific"]:
         messages = [
             SystemMessage(content=RESPOND_OFFTOPIC_PROMPT),
             *state["messages"],  # cronologia messaggi precedente
@@ -165,6 +165,7 @@ def respond_node(state: AgentState) -> AgentState:
         "images": _extract_images(state),
         "is_generic_cybersecurity": False,
         "is_off_topic": False,
+        "is_specific": True,
         # final_response resta vuoto finché evaluate non da l'ok
         "final_response": "",
         "response_status": "unknown",

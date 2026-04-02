@@ -29,5 +29,6 @@ def classify_node(state: AgentState) -> AgentState:
     return {
         **state,
         "is_off_topic": parsed.get("is_off_topic", False),
+        "is_specific": parsed.get("is_specific", True),  # default a specifica se non chiaro
         "classify_reasoning": parsed.get("classify_reasoning", "No reasoning provided")
     }

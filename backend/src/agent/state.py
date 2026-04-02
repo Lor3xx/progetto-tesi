@@ -25,6 +25,7 @@ class AgentState(TypedDict):
     # --- Classify ---
     is_generic_cybersecurity: bool          # True se domanda generica su cybersecurity
     is_off_topic: bool                     # True se domanda fuori contesto
+    is_specific: bool                       # True se domanda specifica (non generica)
     classify_reasoning: str                      # motivazione del classificatore
 
     # --- Query enhancement ---
