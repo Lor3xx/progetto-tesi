@@ -1,6 +1,6 @@
 from langchain_chroma import Chroma
 from config import settings
-from services.groq_client import embeddings
+from services.groq_client import embeddings, hyde_embedder
 
 vector_store = Chroma(
     collection_name=settings.chroma_collection,
@@ -22,6 +22,11 @@ def add_documents(docs: list) -> list[str]:
     ids = vector_store.add_documents(docs)
     return ids
 
+def _clamp_scores(results: list[tuple]) -> list[tuple]:
+    """Garantisce che gli score siano sempre in [0, 1] indipendentemente
+    da eventuali imprecisioni numeriche del modello di embedding."""
+    return [(doc, max(0.0, min(score, 1.0))) for doc, score in results]
+
 # Legacy
 def similarity_search(query: str, k: int | None = None) -> list:
     """
@@ -31,7 +36,7 @@ def similarity_search(query: str, k: int | None = None) -> list:
     top_k = k or settings.retrieval_top_k
     results = vector_store.similarity_search_with_relevance_scores(query, k=top_k)
     # results è una lista di tuple (Document, score)
-    return results
+    return _clamp_scores(results)
 
 
 def document_exists(source: str) -> bool:
@@ -50,11 +55,15 @@ def similarity_search_prioritized(query: str, k: int | None = None) -> list:
     """
     top_k = k or settings.retrieval_top_k
 
+    hyde_embedding = hyde_embedder.embed_query(query)
+
     # Recupera più risultati del necessario per avere margine dopo il riordino
-    candidates = vector_store.similarity_search_with_relevance_scores(
-        query,
+    candidates = vector_store.similarity_search_by_vector_with_relevance_scores(
+        hyde_embedding,
         k=top_k * 3,
     )
+
+    candidates = _clamp_scores(candidates)
 
     # Applica boost ai documenti utente
     boosted = []
@@ -70,8 +79,17 @@ def similarity_search_prioritized(query: str, k: int | None = None) -> list:
 
 def similarity_search_images(query: str, k: int = 3) -> list:
     """Cerca specificamente tra i chunk image_description."""
-    return vector_store.similarity_search_with_relevance_scores(
-        query,
+
+    hyde_embedding = hyde_embedder.embed_query(query)
+    
+    results = vector_store.similarity_search_by_vector_with_relevance_scores(
+        hyde_embedding,
         k=k,
         filter={"chunk_type": "image_description"},
     )
+
+    results = _clamp_scores(results)
+    # Riordina per score decrescente
+    results.sort(key=lambda x: x[1], reverse=True)
+
+    return results

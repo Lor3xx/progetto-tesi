@@ -3,6 +3,8 @@ from langchain_huggingface import HuggingFaceEmbeddings
 from config import settings
 import base64
 from pathlib import Path
+from langchain_classic.chains.hyde.base import HypotheticalDocumentEmbedder
+from langchain_core.prompts import PromptTemplate
 
 # LLM - Groq per le chiamate di chat
 llm = ChatGroq(
@@ -11,6 +13,7 @@ llm = ChatGroq(
     temperature=0.2,
 )
 
+# LLM per valutazione e miglioramento iterativo della risposta
 llm_eval = ChatGroq(
     api_key=settings.groq_api_key,
     model=settings.groq_eval_model,
@@ -21,6 +24,21 @@ llm_eval = ChatGroq(
 embeddings = HuggingFaceEmbeddings(
     model_name=settings.embedding_model,
     model_kwargs={"device": "cpu"},
+)
+
+hyde_prompt = PromptTemplate.from_template(
+    """You are a cybersecurity expert. Write a brief technical paragraph (3-5 sentences) 
+    that could appear in a cybersecurity document and directly answers this question:
+
+    {QUESTION}
+
+    Write only the paragraph, no introduction, no conclusion, no commentary."""
+)
+
+hyde_embedder = HypotheticalDocumentEmbedder.from_llm(
+    llm=llm,           # la tua istanza Groq llama-3.3-70b già esistente
+    base_embeddings=embeddings,   # la tua istanza HuggingFace già esistente
+    custom_prompt=hyde_prompt,
 )
 
 
