@@ -4,7 +4,7 @@ import UploadButton from "./UploadButton";
 
 const API_BASE = process.env.NEXT_PUBLIC_RAG_API_URL ?? "http://localhost:8000";
 
-const Navbar = () => {
+const Header = () => {
     const [apiStatus, setApiStatus] = useState<"unknown" | "ready" | "error">("unknown");
     
     // ── Health check ──────────────────────────────────────────────────────────
@@ -18,7 +18,7 @@ const Navbar = () => {
     return (
         <header className="header">
             <button
-                className="navbar-hamburger"
+                className="header-hamburger"
                 onClick={() => window.dispatchEvent(new CustomEvent("toggle-sidebar"))}
                 aria-label="Menu"
             >
@@ -46,4 +46,4 @@ const Navbar = () => {
     )
 }
 
-export default Navbar;
+export default Header;

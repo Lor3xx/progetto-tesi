@@ -1,5 +1,5 @@
 import ChatBody from "@/components/chat/ChatBody";
-import Navbar from "@/components/layout/Navbar";
+import Header from "@/components/layout/Header";
 import Sidebar from "@/components/layout/Sidebar";
  
 export default function Home() {
@@ -8,7 +8,7 @@ export default function Home() {
 			<Sidebar />
 			<div className="page">
 				{/* ── Header ── */}
-				<Navbar/>
+				<Header />
 
 				{/* ── Chat area ── */}
 				<ChatBody />
