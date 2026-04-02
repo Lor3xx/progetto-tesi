@@ -25,7 +25,7 @@ class Settings(BaseSettings):
     chunk_overlap: int = 64
     
     # Logica agente
-    retrieval_top_k: int = 8
+    retrieval_top_k: int = 5
     user_boost: float = 0.15 # bonus score per i documenti caricati dall'utente
     min_eval_chunk_score: float = 0.3 #soglia per considerare un chunk rilevante e usarlo nella risposta
     min_eval_score: float = 0.7 #soglia minima per accettare la risposta del modello senza retry

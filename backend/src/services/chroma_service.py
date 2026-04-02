@@ -60,7 +60,7 @@ def similarity_search_prioritized(query: str, k: int | None = None) -> list:
     # Recupera più risultati del necessario per avere margine dopo il riordino
     candidates = vector_store.similarity_search_by_vector_with_relevance_scores(
         hyde_embedding,
-        k=top_k * 3,
+        k=top_k + 2,
     )
 
     candidates = _clamp_scores(candidates)

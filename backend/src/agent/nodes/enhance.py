@@ -20,6 +20,7 @@ def enhance_node(state: AgentState) -> AgentState:
     else:
         messages = [
             SystemMessage(content=ENHANCE_SYSTEM_PROMPT),
+            *state["messages"],
             HumanMessage(content=state["user_query"]),
         ]
 

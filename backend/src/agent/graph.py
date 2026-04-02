@@ -1,5 +1,6 @@
 from datetime import datetime, timezone
 
+from agent.nodes.rerank import rerank_node
 from langgraph.graph import StateGraph, END
 from langgraph.checkpoint.sqlite import SqliteSaver
 from langchain_core.messages import HumanMessage, SystemMessage, AIMessage  
@@ -109,6 +110,7 @@ def build_graph(checkpointer: SqliteSaver) -> StateGraph:
     graph.add_node("evaluate", evaluate_node)
     graph.add_node("finalize", finalize_node)
     graph.add_node("partial", partial_node)
+    graph.add_node("rerank", rerank_node)
 
     # Entry point
     graph.set_entry_point("classify")
@@ -127,7 +129,10 @@ def build_graph(checkpointer: SqliteSaver) -> StateGraph:
     )
 
     # Edge dopo retrieve
-    graph.add_edge("retrieve","respond")
+    graph.add_edge("retrieve","rerank")
+
+    # Edge dopo rerank
+    graph.add_edge("rerank", "respond")
 
     # Edge condizionale dopo respond
     graph.add_conditional_edges(

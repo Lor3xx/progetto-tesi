@@ -8,6 +8,7 @@ from services.groq_client import llm_eval
 def classify_node(state: AgentState) -> AgentState:
     response = llm_eval.invoke([
         SystemMessage(content=CLASSIFY_SYSTEM_PROMPT),
+        *state["messages"],
         HumanMessage(content=state["user_query"]),
     ])
 
