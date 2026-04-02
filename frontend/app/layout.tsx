@@ -18,7 +18,9 @@ export default function RootLayout({
 		className="h-full antialiased"
 		>
 			<body>
-				{children}
+				<main>
+					{children}
+				</main>
 			</body>
 		</html>
 	);

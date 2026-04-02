@@ -10,6 +10,7 @@ export default function Sidebar() {
 	const [activeId, setActiveId]           = useState<string | null>(null);
 	const [isLoading, setIsLoading]         = useState(true);
 	const [status, setStatus]               = useState<"unknown" | "ready" | "error">("unknown");
+	const [isOpen, setIsOpen] = useState(false);
 
 	// Leggi il thread attivo da localStorage al mount
 	useEffect(() => {
@@ -26,6 +27,12 @@ export default function Sidebar() {
 		};
 		window.addEventListener("thread-updated", handler);
 		return () => window.removeEventListener("thread-updated", handler);
+	}, []);
+
+	useEffect(() => {
+		const handler = () => setIsOpen(o => !o);
+		window.addEventListener("toggle-sidebar", handler);
+		return () => window.removeEventListener("toggle-sidebar", handler);
 	}, []);
 
 	const fetchConversations = useCallback(async () => {
@@ -61,6 +68,7 @@ export default function Sidebar() {
 
 	const handleSelect = (threadId: string) => {
 		setActiveId(threadId);
+		setIsOpen(false);
 		localStorage.setItem("chat_thread_id", threadId);
 		// Notifica ChatBody di caricare la history di questo thread
 		window.dispatchEvent(new CustomEvent("thread-selected", { detail: threadId }));
@@ -108,7 +116,7 @@ export default function Sidebar() {
 	}
 
 	return (
-		<aside className="sidebar">
+		<aside className={`sidebar${isOpen ? " open" : ""}`}>
 			<div className="sidebar-header">
 				<span className="sidebar-title">Cronologia</span>
 				<button 

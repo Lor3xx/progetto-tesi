@@ -728,3 +728,47 @@ textarea::placeholder { color: var(--text-muted); }
 	background: rgba(248, 113, 113, 0.22);
 	border-color: var(--danger);
 }
+
+@media (max-width: 700px) {
+    .app-root {
+        position: relative;
+    }
+
+    .sidebar {
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100vh;
+        z-index: 100;
+        transform: translateX(-100%);  /* nascosta di default */
+        transition: transform 0.25s ease;
+        min-width: 240px;
+        width: 240px;
+    }
+
+    .sidebar.open {
+        transform: translateX(0);      /* visibile quando ha classe .open */
+    }
+
+    .page {
+        width: 100%;
+    }
+}
+
+.navbar-hamburger {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 5px;
+}
+
+@media (max-width: 700px) {
+    .navbar-hamburger {
+        display: flex;
+    }
+}
