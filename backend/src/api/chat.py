@@ -3,10 +3,27 @@ import sqlite3
 
 from fastapi import APIRouter, HTTPException, Request
 from api.schemas import ChatRequest, ChatResponse, ImageResult
+from langchain_core.messages import HumanMessage, SystemMessage
 from agent.state import AgentState
 from config import settings
+from services.groq_client import llm_eval
 
 router = APIRouter(prefix="/chat", tags=["chat"])
+
+def generate_title(user_message: str) -> str:
+    messages = [
+        SystemMessage(content=(
+            "Generate a short, concise title (max 6 words) for a conversation "
+            "based on the user's first message. No punctuation, no quotes."
+            "Write the title in the same language as the message."
+        )),
+        HumanMessage(content=user_message)
+    ]
+
+    response = llm_eval.invoke(messages)
+
+    return response.content.strip()
+
 
 @router.post("", response_model=ChatResponse)
 async def chat(request: ChatRequest, req: Request):
@@ -19,11 +36,21 @@ async def chat(request: ChatRequest, req: Request):
         raise HTTPException(status_code=503, detail="Sistema non ancora pronto")
 
     thread_id = request.thread_id or str(uuid4())
+    is_new_conversation = request.thread_id is None
 
     conn = sqlite3.connect(settings.sqlite_path, check_same_thread=False)
+
+    if is_new_conversation:
+        try:
+            title = generate_title(request.message)
+        except Exception:
+            title = request.message[:80]  # fallback
+    else:
+        title = None
+
     conn.execute(
         "INSERT OR IGNORE INTO conversations (thread_id, title) VALUES (?, ?)",
-        (thread_id, request.message[:80])
+        (thread_id, title)
     )
     conn.commit()
 
@@ -71,7 +98,7 @@ async def chat(request: ChatRequest, req: Request):
     print(f"Images found  : {len(result['images'])}")
     print(f"Draft response : {result['draft_response'][:500]}...")
     print(f"=" * 50)
-    
+
     return ChatResponse(
         answer=result["final_response"],
         thread_id=thread_id,
