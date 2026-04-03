@@ -193,6 +193,31 @@ html, body {
 	opacity: 0.8;
 }
 
+.empty-chat {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+	text-align: center;
+	padding: 20px;
+}
+
+.empty-chat-content {
+	max-width: 500px;
+}
+
+.empty-chat h1 {
+	font-size: 2.2rem;
+	font-weight: 600;
+	color: var(--text);
+	margin-bottom: 10px;
+}
+
+.empty-chat p {
+	font-size: 1.1rem;
+	color: var(--text-muted);
+}
+
 /* micro animazione */
 @keyframes fadeIn {
 	from {

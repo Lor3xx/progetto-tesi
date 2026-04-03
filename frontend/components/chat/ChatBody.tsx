@@ -167,8 +167,14 @@ const ChatBody = () => {
                                 <path d="M20 17.5a4.5 4.5 0 0 0-1-8.9 6 6 0 0 0-11.5 1.5A4 4 0 0 0 6 18h14z"/>
                                 <path d="M4 4l16 16"/>
                             </svg>
-
                             <span>Backend non disponibile</span>
+                        </div>
+                    </div>
+                ) : messages.length === 0 ? (
+                    <div className="empty-chat">
+                        <div className="empty-chat-content">
+                            <h1>Ciao 👋, come posso aiutarti?</h1>
+                            <p>Chiedimi qualcosa sulla cybersecurity</p>
                         </div>
                     </div>
                 ) : (
