@@ -37,16 +37,10 @@ The query is unclear but could relate to cybersecurity given the history.
 - Include enough technical context that HyDE can generate a useful hypothetical 
   document without seeing the conversation history.
 - Never mention the conversation history in the output.
-- Never answer the query, you have to respond with ONLY the JSON format provided below, no explanations, no markdown, no backticks.
 
 ### Output format
 You can't answer the question directly, you can only enhance it for better retrieval.
-Respond ONLY in this JSON format, no markdown, no backticks:
-{
-  "enhanced_query": "...",
-  "reasoning": "...",
-  "missing_aspects": []
-}
+Provide the enhanced query, a one-sentence reasoning and the list of missing aspects that would help answer the question if they were present in the retrieved documents.
 """
 
 # Prompt per il secondo tentativo sempre di enhance, quando l'evaluator ha già detto cosa manca
@@ -64,11 +58,7 @@ What was missing from retrieved documents: {missing_aspects}
 Rewrite the query to target the missing aspects. Add different keywords and synonyms
 
 Respond ONLY in this JSON format, no markdown, no backticks:
-{
-  "enhanced_query": "...",
-  "reasoning": "...",
-  "missing_aspects": []
-}
+Provide the enhanced query, a one-sentence reasoning, and the list of missing aspects.
 """
 
 # Prompt per il nodo classify, che decide se la domanda è off-topic o generica (non richiede documenti) o specifica (richiede documenti)
@@ -103,12 +93,7 @@ A wrong specific classification only causes a slightly broader search.
 The cost of a false negative is much higher than a false positive.
 
 ### Output format
-Respond ONLY in this JSON format, no markdown, no backticks:
-{
-  "is_off_topic": true/false,
-  "is_specific": true/false,
-  "classify_reasoning": "..."
-}
+Provide your classification decision and a one-sentence reasoning.
 """
 
 # Prompt per il nodo rerank, che prende i chunk recuperati e li riordina in base alla rilevanza per la domanda

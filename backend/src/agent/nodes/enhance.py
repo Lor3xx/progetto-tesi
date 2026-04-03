@@ -1,10 +1,15 @@
 from agent.prompts import ENHANCE_RETRY_PROMPT, ENHANCE_SYSTEM_PROMPT
 from langchain_core.messages import HumanMessage, SystemMessage
+from pydantic import BaseModel
 from services.groq_client import llm
 from agent.state import AgentState
+class EnhanceOutput(BaseModel):
+    enhanced_query: str
+    enhancement_reasoning: str
+    missing_aspects: list[str]
 
 def enhance_node(state: AgentState) -> AgentState:
-    import json
+    structured_llm = llm.with_structured_output(EnhanceOutput)
 
     if state["retry_count"] > 0:
         user_content = (
@@ -23,27 +28,11 @@ def enhance_node(state: AgentState) -> AgentState:
             HumanMessage(content=state["user_query"]),
         ]
 
-    response = llm.invoke(messages)
-
-    try:
-        clean = (response.content.strip()
-                 .removeprefix("```json").removeprefix("```")
-                 .removesuffix("```").strip())
-        parsed = json.loads(clean)
-    except json.JSONDecodeError:
-        # fallback se il modello non rispetta il JSON
-        print("\n\nJSON parse error in enhance_node, response was:", response.content, "\n\n\n")
-        parsed = {
-            "is_generic": False,
-            "is_off_topic": False,
-            "enhanced_query": state["user_query"],
-            "reasoning": "parse error, using original query",
-            "missing_aspects": [],
-        }
+    response = structured_llm.invoke(messages)
 
     return {
         **state,
-        "enhanced_query": parsed.get("enhanced_query", state["user_query"]),
-        "enhancement_reasoning": parsed.get("reasoning", ""),
-        "missing_aspects": parsed.get("missing_aspects", []),
+        "enhanced_query": response.enhanced_query,
+        "enhancement_reasoning": response.enhancement_reasoning,
+        "missing_aspects": response.missing_aspects,
     }

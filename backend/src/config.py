@@ -9,8 +9,8 @@ class Settings(BaseSettings):
     # Groq
     groq_api_key: str = os.getenv("GROQ_API_KEY")
     groq_eval_model: str = "llama-3.1-8b-instant"  # veloce e leggero
-    #groq_llm_model: str = "llama-3.3-70b-versatile"  # solo per risposta finale
-    groq_llm_model: str = "meta-llama/llama-4-scout-17b-16e-instruct" # alternativa se finisco token
+    groq_llm_model: str = "llama-3.3-70b-versatile"  # solo per risposta finale
+    #groq_llm_model: str = "meta-llama/llama-4-scout-17b-16e-instruct" # alternativa se finisco token
     groq_vision_model: str = "meta-llama/llama-4-scout-17b-16e-instruct"
     
     # HuggingFace Embeddings
