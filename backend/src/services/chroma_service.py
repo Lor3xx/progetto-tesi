@@ -93,3 +93,27 @@ def similarity_search_images(query: str, k: int = 3) -> list:
     results.sort(key=lambda x: x[1], reverse=True)
 
     return results
+
+# Elimina tutti i chunk di un documento
+def delete_document(source: str) -> dict:
+    """
+    Rimuove da ChromaDB tutti i chunk relativi a un documento:
+    - chunk testuali
+    - chunk image_description
+    """
+    collection = get_vector_store()._collection
+
+    # Prima conta quanti chunk verranno eliminati
+    existing = collection.get(where={"source": source})
+    count = len(existing["ids"])
+
+    if count == 0:
+        print(f"Nessun chunk trovato per '{source}'")
+    else:
+        print(f"Trovati {count} chunk per '{source}', li elimino...")
+        collection.delete(where={"source": source})
+
+        # Verifica
+        after = collection.get(where={"source": source})
+        print(f"Chunk rimanenti dopo delete: {len(after['ids'])}")
+        print("Fatto.")
