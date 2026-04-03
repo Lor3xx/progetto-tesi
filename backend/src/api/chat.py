@@ -10,6 +10,9 @@ router = APIRouter(prefix="/chat", tags=["chat"])
 
 @router.post("", response_model=ChatResponse)
 async def chat(request: ChatRequest, req: Request):
+    print(f"*" * 50)
+    print(f"*" * 50)
+    print(f"Received query: {request.message[:100]}")
     rag_graph = req.app.state.rag_graph  # recuperato da app.state
 
     if not rag_graph:
@@ -51,6 +54,24 @@ async def chat(request: ChatRequest, req: Request):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Errore nel grafo: {str(e)}")
 
+    #print di debug
+    print(f"=" * 50)
+    print(f"Status        : {result['response_status']}")
+    print(f"Is generic    : {result['is_generic_cybersecurity']}")
+    print(f"Is off-topic  : {result['is_off_topic']}")
+    print(f"Classify reasoning: {result['classify_reasoning']}")
+    print(f"Enhanced query: {result['enhanced_query']}")
+    print(f"Enhancement reasoning: {result['enhancement_reasoning']}")
+    print(f"Eval score    : {result['eval_score']:.2f}")
+    print(f"Eval reasoning: {result['eval_reasoning']}")
+    print(f"Retry count   : {result['retry_count']}")
+    print(f"Retrieved chunk scores: {[chunk['score'] for chunk in result['retrieved_chunks']]}")
+    print(f"Retrieved image chunks scores: {[chunk['score'] for chunk in result['retrieved_image_chunks']]}")
+    print(f"Sources       : {len(result['sources'])}")
+    print(f"Images found  : {len(result['images'])}")
+    print(f"Draft response : {result['draft_response'][:500]}...")
+    print(f"=" * 50)
+    
     return ChatResponse(
         answer=result["final_response"],
         thread_id=thread_id,

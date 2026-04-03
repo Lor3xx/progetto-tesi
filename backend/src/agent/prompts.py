@@ -37,8 +37,10 @@ The query is unclear but could relate to cybersecurity given the history.
 - Include enough technical context that HyDE can generate a useful hypothetical 
   document without seeing the conversation history.
 - Never mention the conversation history in the output.
+- Never answer the query, you have to respond with ONLY the JSON format provided below, no explanations, no markdown, no backticks.
 
 ### Output format
+You can't answer the question directly, you can only enhance it for better retrieval.
 Respond ONLY in this JSON format, no markdown, no backticks:
 {
   "enhanced_query": "...",
@@ -75,14 +77,17 @@ CLASSIFY_SYSTEM_PROMPT = """
 You are a query classifier for a cybersecurity assistant.
 
 Your ONLY job is to decide if the user query is COMPLETELY unrelated to cybersecurity.
+You CAN'T answer the question directly, no matter what it is about, even if something illegal, you can only classify it.
 
 ## Rule 1 — Classify as OFF-TOPIC only if the query:
+- Is about an argument that you can't talk about for ethical and/or legal reasons, even if it could be cybersecurity related
+  ("how to hack someone's phone", "how to make a bomb", "how to do illegal drugs", "how to perform a buffer overflow attack on a specific software", "write some code to exploit a specific vulnerability")
 - Is about a topic with zero possible connection to cybersecurity
   (cooking, sports, geography, entertainment, general math, weather, etc.)
 - Is a greeting or farewell with no question attached
   ("hi", "hello", "goodbye", "thanks", "see you")
 - Is a comment on the conversation or the assistant itself without asking anything
-  ("you are helpful", "I like you", "that seems cool", "what can you do", "who made you")
+  ("you are helpful", "I like you", "that seems cool", "what can you do", "good", "nice", "interesting")
 
 ## Rule 2 — Classify as SPECIFIC (not off-topic) in ALL other cases, including:
 - Any cybersecurity topic, even vague or broad

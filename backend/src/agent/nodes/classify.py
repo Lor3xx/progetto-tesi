@@ -2,10 +2,10 @@ from agent.state import AgentState
 import json
 from agent.prompts import CLASSIFY_SYSTEM_PROMPT
 from langchain_core.messages import HumanMessage, SystemMessage
-from services.groq_client import llm_eval
+from services.groq_client import llm
 
 def classify_node(state: AgentState) -> AgentState:
-    response = llm_eval.invoke([
+    response = llm.invoke([
         SystemMessage(content=CLASSIFY_SYSTEM_PROMPT),
         *state["messages"],
         HumanMessage(content=state["user_query"]),
@@ -18,6 +18,7 @@ def classify_node(state: AgentState) -> AgentState:
         parsed = json.loads(clean)
     except json.JSONDecodeError:
         # Se il parsing fallisce, assumiamo che la query sia specifica (default più sicuro)
+        print("\n\nJSON parse error in classify, response was:", response.content, "\n\n\n")
         return {
             **state,
             "is_generic_cybersecurity": False,

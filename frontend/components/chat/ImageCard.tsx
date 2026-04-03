@@ -1,7 +1,6 @@
 "use client";
 
 import { ImageResult } from "@/types";
-import Image from "next/image";
 import { useState } from "react";
 
 const API_BASE = process.env.NEXT_PUBLIC_RAG_API_URL ?? "http://localhost:8000";
@@ -38,7 +37,7 @@ const ImageCard = ({ img, index }: { img: ImageResult; index: number }) => {
             </div>
             {open && (
                 <div className="image-card-body">
-                    <Image
+                    <img
                         src={imageUrl}
                         alt={img.description}
                         className="image-card-img"
