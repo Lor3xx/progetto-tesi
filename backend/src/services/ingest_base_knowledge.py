@@ -1,3 +1,7 @@
+"""
+Usato per creare la conoscenza di base del chat bot.
+"""
+
 from pathlib import Path
 from services.pdf_processor import ingest_base_knowledge
 

@@ -1,12 +1,8 @@
-import base64
-import json
 from pathlib import Path
 
 from agent.prompts import RESPOND_GENERIC_PROMPT, RESPOND_SYSTEM_PROMPT, RESPOND_OFFTOPIC_PROMPT
 from langchain_core.messages import HumanMessage, SystemMessage
-from langchain_core.documents import Document
 
-from config import settings
 from services.groq_client import llm
 from agent.state import AgentState, ImageResult
 
@@ -56,7 +52,7 @@ def _build_context_messages(state: AgentState) -> list:
             "Answer based strictly on the context above. "
         )
     })
-    print(f"\nReturning content")
+    print("\nReturning content")
     return content
 
 
@@ -156,7 +152,7 @@ def respond_node(state: AgentState) -> AgentState:
     ]
     print(f"\nInvoking LLM with {len(messages)} messages, including {len(state['retrieved_chunks'])} text chunks and {len(state['retrieved_image_chunks'])} image chunks.")
     response = llm.invoke(messages)
-    print(f"\nReturning response")
+    print("\nReturning response")
 
     return {
         **state,

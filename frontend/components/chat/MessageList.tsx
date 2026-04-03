@@ -1,5 +1,4 @@
 "use client"
-import { useState } from "react";
 import { Message } from "@/types";
 import MessageBubble from "./MessageBubble"
 

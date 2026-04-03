@@ -1,4 +1,4 @@
-export type SourceDocument = {
+export interface SourceDocument {
     content: string;
     metadata: Record<string, string>;
 }
@@ -21,27 +21,25 @@ export interface Message {
     timestamp: Date;
 }
 
-
 export interface ConversationPreview {
-  thread_id: string;
-  title: string;
-  created_at: string;   // ISO-8601 UTC
-  updated_at: string;   // ISO-8601 UTC
-  message_count: number;
+	thread_id: string;
+	title: string;
+	created_at: string;   // ISO-8601 UTC
+	updated_at: string;   // ISO-8601 UTC
+	message_count: number;
 }
  
 export interface ConversationListResponse {
-  conversations: ConversationPreview[];
-  total: number;
+	conversations: ConversationPreview[];
+	total: number;
 }
 
-
 export interface UploadResponse {
-  filename: string;
-  saved_as: string;
-  size_bytes: number;
-  status: string;
-  message: string;
+	filename: string;
+	saved_as: string;
+	size_bytes: number;
+	status: string;
+	message: string;
 }
 
 export interface Props {
@@ -63,5 +61,5 @@ export interface InputBarProps {
 	loading: boolean;
 	input: string;
 	setInput: (value: string) => void;
-  online: boolean;
+  	online: boolean;
 }

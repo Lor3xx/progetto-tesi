@@ -33,8 +33,8 @@ const Header = () => {
 
 			<div className="header-logo">🔍</div>
 			<div>
-				<div className="header-title">RAG Document Search</div>
-				<div className="header-sub">Interroga i tuoi documenti con l'AI</div>
+				<div className="header-title">{"RAG Document Search"}</div>
+				<div className="header-sub">{"Interroga i tuoi documenti con l'AI"}</div>
 			</div>
 
             <UploadButton apiStatus={apiStatus} />

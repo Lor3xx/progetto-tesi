@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 from agent.nodes.rerank import rerank_node
 from langgraph.graph import StateGraph, END
 from langgraph.checkpoint.sqlite import SqliteSaver
-from langchain_core.messages import HumanMessage, SystemMessage, AIMessage  
+from langchain_core.messages import HumanMessage, AIMessage  
 from agent.state import AgentState
 from agent.nodes.enhance import enhance_node
 from agent.nodes.retrieve import retrieve_node

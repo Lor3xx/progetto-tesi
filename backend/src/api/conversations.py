@@ -11,13 +11,10 @@ costruire l'anteprima da mostrare nella sidebar.
 
 from __future__ import annotations
 
-from copyreg import pickle
-import json
 import sqlite3
 from datetime import datetime, timezone
-from typing import Optional
 
-from fastapi import APIRouter, Body, Depends, HTTPException, Query
+from fastapi import APIRouter, HTTPException, Query
 
 from config import settings 
 from api.schemas import ConversationListResponse, ConversationPreview, TitleUpdate
@@ -69,7 +66,6 @@ def _parse_ts_from_checkpoint(raw_checkpoint: bytes | None) -> str:
 
 
 def _parse_checkpoint(raw: bytes | None) -> dict:
-    import msgpack
 
     if not raw:
         return {}

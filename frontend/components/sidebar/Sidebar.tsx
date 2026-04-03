@@ -27,7 +27,7 @@ export default function Sidebar() {
 		};
 		window.addEventListener("thread-updated", handler);
 		return () => window.removeEventListener("thread-updated", handler);
-	}, []);
+	},);
 
 	useEffect(() => {
 		const handler = () => setIsOpen(o => !o);
@@ -53,7 +53,7 @@ export default function Sidebar() {
 			setConversations(data?.conversations ?? []);
 			setStatus("ready");
 
-		} catch (err) {
+		} catch {
 			// 🟡 backend spento → NON è errore UI
 			setStatus("error");
 

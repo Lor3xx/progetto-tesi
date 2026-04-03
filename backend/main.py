@@ -40,7 +40,7 @@ async def lifespan(app: FastAPI):
 
     checkpointer = SqliteSaver(conn)
     rag_graph = build_graph(checkpointer=checkpointer)
-    app.state.rag_graph = rag_graph  # salvi su app.state invece che globale
+    app.state.rag_graph = rag_graph  # salva su app.state invece che globale
 
     print("Backend pronto.")
     yield

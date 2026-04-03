@@ -1,6 +1,5 @@
 from agent.prompts import ENHANCE_RETRY_PROMPT, ENHANCE_SYSTEM_PROMPT
 from langchain_core.messages import HumanMessage, SystemMessage
-from config import settings
 from services.groq_client import llm
 from agent.state import AgentState
 

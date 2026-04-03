@@ -7,7 +7,7 @@ function formatDate(isoString: string): string {
 	try {
 		const date = new Date(isoString);
 		const now = new Date();
-		var diffDays = (now.getTime() - date.getTime()) / 86_400_000;
+		let diffDays = (now.getTime() - date.getTime()) / 86_400_000;
 		if (diffDays < 0.7) return "oggi";
 		if (diffDays < 1.2) return "ieri";
 		diffDays = Math.round(diffDays);

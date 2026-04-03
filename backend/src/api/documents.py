@@ -1,9 +1,6 @@
 import hashlib
-import shutil
 from pathlib import Path
 
-import hashlib
-from pathlib import Path
  
 from api.schemas import UploadResponse
 from fastapi import APIRouter, HTTPException, UploadFile, File

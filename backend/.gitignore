@@ -5,12 +5,12 @@ build/
 dist/
 wheels/
 *.egg-info
-
+.ruff_cache/
 
 # Virtual environments
 .venv
 
-#other
+# Other
 .env
 data/chat_history.db
 data/chat_history.db-shm

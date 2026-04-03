@@ -1,7 +1,7 @@
 "use client";
 import { useState, useRef, useEffect, useCallback } from "react";
 import { ImageResult, Message, SourceDocument } from "@/types";
-import InputBar from "../layout/InputBar";
+import InputBar from "./InputBar";
 import MessageList from "./MessageList";
 import TypingIndicator from "./TypingIndicator";
 
@@ -154,7 +154,7 @@ const ChatBody = () => {
         } finally {
             setLoading(false);
         }
-    }, [loading, threadId]);
+    }, [loading, threadId, apiStatus]);
 
     return (
         <div className="chat-body">

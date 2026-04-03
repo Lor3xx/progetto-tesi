@@ -41,7 +41,6 @@ html, body {
 	min-width: 0;      /* evita overflow con testi lunghi */
 	height: 100vh;
 	overflow: hidden;
-	/* RIMOSSO: max-width: 860px  e  margin: 0 auto */
 }
 
 /* ── Header ─────────────────────────────────────────────────────── */
@@ -141,7 +140,7 @@ html, body {
 .upload-feedback--error    { color: var(--danger); }
 .upload-feedback--uploading{ color: var(--text-muted); }
 
-
+/* ── Chat body ──────────────────────────────────────────────────── */
 .chat-body {
     display: flex;
     flex-direction: column;
@@ -150,7 +149,6 @@ html, body {
     overflow: hidden;
 }
 
-/* ── Chat area ──────────────────────────────────────────────────── */
 .chat-area {
 	flex: 1;
 	min-height: 0;
@@ -729,6 +727,7 @@ textarea::placeholder { color: var(--text-muted); }
 	border-color: var(--danger);
 }
 
+/* ── Responsive sidebar ──────────────────────────────────────────────────── */
 @media (max-width: 700px) {
     .app-root {
         position: relative;

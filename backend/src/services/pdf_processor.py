@@ -197,7 +197,6 @@ def process_and_ingest_pdf(
 def ingest_base_knowledge(base_dir: Path | None = None) -> list[dict]:
     """
     Scansiona la cartella data/base_knowledge e ingestisce tutti i PDF trovati.
-    Da chiamare allo startup del server (in main.py con lifespan).
     """
     folder = base_dir or Path("data/base_knowledge")
     results = []

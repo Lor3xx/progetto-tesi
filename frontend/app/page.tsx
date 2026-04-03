@@ -1,6 +1,6 @@
 import ChatBody from "@/components/chat/ChatBody";
-import Header from "@/components/layout/Header";
-import Sidebar from "@/components/layout/Sidebar";
+import Header from "@/components/header/Header";
+import Sidebar from "@/components/sidebar/Sidebar";
  
 export default function Home() {
 	return (
