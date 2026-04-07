@@ -1,6 +1,4 @@
 """
-document_validator.py
-─────────────────────
 Valida se un PDF è pertinente alla cybersecurity prima di indicizzarlo.
 
 Flusso:
@@ -53,11 +51,14 @@ Document sample (first pages):
 ---
 
 A document is considered relevant if it covers topics such as:
-cybersecurity, computer networks, cryptography, vulnerabilities, malware, cyber attacks,
+cybersecurity, cryptography, vulnerabilities, malware, cyber attacks,
 digital privacy, IT compliance, digital forensics, operating systems in a security context, etc.
 
 A document is NOT relevant if it covers topics unrelated to cybersecurity
 (e.g., cooking, medieval history, literature, general medicine, sports, etc.).
+
+A document is also NOT relevant if it talks about IT topics but not in a security context 
+(e.g., programming, machine learning, general networking, etc.) — it must have a clear cybersecurity focus.
 
 Respond ONLY in this JSON format:
 {
@@ -161,6 +162,7 @@ def validate_document(pdf_path: Path) -> ValidationResult:
 
     # 2. Calcola score embedding
     score = _compute_cyber_score(sample)
+    print(f"Validation score for {pdf_path.name}: {score:.4f}")
 
     # 3. Decisione in base alle soglie
     if score >= settings.min_ingestion_score:
@@ -181,6 +183,7 @@ def validate_document(pdf_path: Path) -> ValidationResult:
 
     # 4. Zona grigia → LLM decide
     llm_accepted, llm_reason = _ask_llm(sample)
+    print(f"LLM decision for {pdf_path.name}: accepted={llm_accepted}, reason={llm_reason}")
     return ValidationResult(
         accepted=llm_accepted,
         score=score,
