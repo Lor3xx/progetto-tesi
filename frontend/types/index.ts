@@ -63,3 +63,9 @@ export interface InputBarProps {
 	setInput: (value: string) => void;
   	online: boolean;
 }
+
+export interface Document {
+  filename: string;
+  size_bytes: number;
+  source: "user" | "system";
+}

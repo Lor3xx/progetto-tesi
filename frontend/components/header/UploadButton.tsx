@@ -63,7 +63,7 @@ export default function UploadButton({ apiStatus }: { apiStatus: "unknown" | "re
     const isUploading = status === "uploading";
 
     return (
-        <div className="upload-wrapper">
+        <div >
             {/* Feedback pill — visibile solo quando non idle */}
             {status !== "idle" && (
                 <span className={`upload-feedback upload-feedback--${status}`} title={message}>

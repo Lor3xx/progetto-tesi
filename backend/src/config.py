@@ -33,6 +33,7 @@ class Settings(BaseSettings):
     max_retries: int = 2
 
     # Accettazione nuovi documenti
+    base_knowledge_dir: Path = Path("data/base_knowledge")
     uploads_dir: Path = Path("./data/uploads")
     max_file_size: int = 50 * 1024 * 1024  # 50 MB
     sample_pages_for_validation: int = 5

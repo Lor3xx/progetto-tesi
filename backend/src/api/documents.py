@@ -1,10 +1,9 @@
-import hashlib
 from pathlib import Path
 
- 
 from api.schemas import UploadResponse
 from fastapi import APIRouter, HTTPException, UploadFile, File
- 
+from fastapi.responses import FileResponse
+
 from services.document_validator import validate_document
 from services.pdf_processor import process_and_ingest_pdf
 
@@ -40,10 +39,9 @@ async def upload_document(file: UploadFile = File(...)):
     if not data.startswith(b"%PDF"):
         raise HTTPException(status_code=415, detail="Il file non è un PDF valido.")
  
-    # 4. Deduplicazione per hash contenuto
-    content_hash = hashlib.sha256(data).hexdigest()[:16]
+    # 4. Genera nome sicuro e percorso di destinazione con controllo duplicati
     stem         = _safe_stem(file.filename or "document")
-    dest_path    = settings.uploads_dir / f"{stem}_{content_hash}.pdf"
+    dest_path    = settings.uploads_dir / f"{stem}.pdf"
     original_name = file.filename or "document.pdf"
  
     if dest_path.exists():
@@ -115,14 +113,25 @@ async def upload_document(file: UploadFile = File(...)):
  
 @router.get("/list")
 async def list_documents():
-    files = sorted(
-        settings.uploads_dir.glob("*.pdf"),
-        key=lambda p: p.stat().st_mtime,
-        reverse=True,
-    )
-    return {
-        "documents": [
-            {"filename": p.name, "size_bytes": p.stat().st_size}
-            for p in files
-        ]
-    }
+    result = []
+    for folder, source in [
+        (settings.uploads_dir, "user"),
+        (settings.base_knowledge_dir, "system")
+    ]:
+        for p in sorted(folder.glob("*.pdf"), key=lambda f: f.stat().st_mtime, reverse=True):
+            result.append({
+                "filename": p.name,
+                "size_bytes": p.stat().st_size,
+                "source": source
+            })
+    return {"documents": result}
+
+
+
+@router.get("/serve/{filename}")
+async def serve_document(filename: str):
+    for folder in [settings.uploads_dir, settings.base_knowledge_dir]:
+        path = folder / filename
+        if path.exists() and path.suffix == ".pdf":
+            return FileResponse(path, media_type="application/pdf")
+    raise HTTPException(status_code=404, detail="File non trovato.")
