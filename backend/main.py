@@ -10,8 +10,8 @@ from fastapi.staticfiles import StaticFiles
 
 sys.path.append(str(Path(__file__).parent / "src"))
 
-from config import settings
-from agent.graph import build_graph
+from src.config import settings
+from src.agent.graph import build_graph
 from langgraph.checkpoint.sqlite import SqliteSaver
 
 from src.api.chat import router as chat_router

@@ -1,6 +1,6 @@
 # File per i prompt per i vari llm che costituiscono il chatbot RAG
 
-# Prompt per il nodo enhance, che decide se la domanda è generica, specifica o off-topic e in caso specifico la riscrive in modo più dettagliato per massimizzare il recall della ricerca
+# Prompt per il nodo enhance, che prende la domanda dell'utente e la arricchisce per migliorare il recupero dei documenti
 ENHANCE_SYSTEM_PROMPT = """
 ### System (Priming)
 You are a search query optimizer for a cybersecurity RAG system.
@@ -61,7 +61,7 @@ Respond ONLY in this JSON format, no markdown, no backticks:
 Provide the enhanced query, a one-sentence reasoning, and the list of missing aspects.
 """
 
-# Prompt per il nodo classify, che decide se la domanda è off-topic o generica (non richiede documenti) o specifica (richiede documenti)
+# Prompt per il nodo classify, che decide se la domanda è off-topic o a tema cybersecurity
 CLASSIFY_SYSTEM_PROMPT = """
 ### System (Priming)
 You are a query classifier for a cybersecurity assistant.
@@ -94,6 +94,12 @@ The cost of a false negative is much higher than a false positive.
 
 ### Output format
 Provide your classification decision and a one-sentence reasoning.
+Respond ONLY in this JSON format:
+{
+  "is_off_topic": true/false,
+  "is_specific": true/false,
+  "classify_reasoning": "..."
+}
 """
 
 # Prompt per il nodo rerank, che prende i chunk recuperati e li riordina in base alla rilevanza per la domanda
@@ -161,7 +167,7 @@ Rules:
 - Answer in the same language as the user's question.
 """
 
-# Prompt per il nodo respond quando la domanda è generica e non si usano documenti
+# Prompt per il nodo respond quando la domanda è generica e non si sono trovati documenti
 RESPOND_GENERIC_PROMPT = """
 ### System (Priming)
 You are a specialized cybersecurity assistant answering a general cybersecurity question.

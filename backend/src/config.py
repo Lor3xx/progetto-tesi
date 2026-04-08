@@ -9,12 +9,19 @@ class Settings(BaseSettings):
     # Groq
     groq_api_key: str = os.getenv("GROQ_API_KEY")
     groq_eval_model: str = "llama-3.1-8b-instant"  # veloce e leggero
-    groq_llm_model: str = "llama-3.3-70b-versatile"  # solo per risposta finale
-    #groq_llm_model: str = "meta-llama/llama-4-scout-17b-16e-instruct" # alternativa se finisco token
+    #groq_llm_model: str = "llama-3.3-70b-versatile"  # solo per risposta finale
+    groq_llm_model: str = "meta-llama/llama-4-scout-17b-16e-instruct" # alternativa se finisco token
     groq_vision_model: str = "meta-llama/llama-4-scout-17b-16e-instruct"
     
     # HuggingFace Embeddings
     embedding_model: str = "sentence-transformers/all-MiniLM-L6-v2"
+
+    # Google Gemini
+    gemini_api_key: str = os.getenv("GOOGLE_API_KEY")
+    gemini_embedding_model: str = "gemini-embedding-2-preview"
+    gemini_llm_model: str = "gemini-2.5-flash"
+    #gemini_llm_model: str = "gemini-2.5-flash-lite-preview-09-2025" # modello di scorta
+    gemini_eval_model: str = "gemini-2.5-flash-lite"
     
     # ChromaDB
     chroma_path: str = "./data/chroma_db"

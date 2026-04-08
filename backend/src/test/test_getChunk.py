@@ -1,3 +1,7 @@
+from pathlib import Path
+import sys
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # aggiunge src/ al path
 from services.chroma_service import similarity_search_prioritized, similarity_search_images
 
 query = [

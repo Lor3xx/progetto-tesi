@@ -43,7 +43,6 @@ def route_after_evaluate(state: AgentState) -> str:
 
 # --- Nodi terminali ---
 
-
 def finalize_node(state: AgentState) -> AgentState:
     """Promuove la bozza a risposta finale."""
     now = datetime.now(timezone.utc).isoformat()
@@ -115,9 +114,6 @@ def build_graph(checkpointer: SqliteSaver) -> StateGraph:
     # Entry point
     graph.set_entry_point("classify")
 
-    # Edge dopo enhance
-    graph.add_edge("enhance", "retrieve")
-
     # Edge condizionale dopo classify
     graph.add_conditional_edges(
         "classify",
@@ -127,6 +123,9 @@ def build_graph(checkpointer: SqliteSaver) -> StateGraph:
             "respond": "respond",
         }
     )
+
+    # Edge dopo enhance
+    graph.add_edge("enhance", "retrieve")
 
     # Edge dopo retrieve
     graph.add_edge("retrieve","rerank")
@@ -160,4 +159,3 @@ def build_graph(checkpointer: SqliteSaver) -> StateGraph:
     graph.add_edge("partial", END)
 
     return graph.compile(checkpointer=checkpointer)
-

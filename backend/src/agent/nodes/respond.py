@@ -57,6 +57,7 @@ def _build_context_messages(state: AgentState) -> list:
 
 
 def _extract_sources(state: AgentState) -> list[dict]:
+    """Estrae le fonti uniche dai chunk testuali per mostrarle al frontend."""
     print(f"\nExtracting sources from {len(state['retrieved_chunks'])} text chunks")
     seen = set()
     sources = []
