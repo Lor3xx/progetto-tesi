@@ -61,9 +61,10 @@ What was missing from retrieved documents: {missing_aspects}
 
 ### Instructions
 Rewrite the query to target the missing aspects. Add different keywords and synonyms
-
+You MUST output valid JSON.
+Do not include markdown, code fences, headings, or explanations.
+If you add anything outside the JSON, the output is invalid.
 Respond ONLY in this JSON format, no markdown, no backticks:
-Respond ONLY in this JSON format:
 {
   "enhanced_query": "...",
   "enhancement_reasoning": "...",

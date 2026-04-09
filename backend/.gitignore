@@ -15,3 +15,5 @@ wheels/
 data/chat_history.db
 data/chat_history.db-shm
 data/chat_history.db-wal
+evaluation/
+.deepeval

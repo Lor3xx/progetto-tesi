@@ -23,6 +23,7 @@ for q in query:
     for doc, score in hits:
         print(f"\nScore: {score:.3f}")
         print(f"Source: {doc.metadata['source']}")
+        print(f"Chunk id: {doc.metadata['chunk_id']}")
         print(f"Chunk: {doc.page_content[:200]}")
     print("-" * 50)
     for doc, score in images:

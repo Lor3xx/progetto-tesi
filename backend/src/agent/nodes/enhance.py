@@ -15,7 +15,11 @@ def extract_text_content(response):
 
     # Se è già stringa (vecchio comportamento)
     if isinstance(content, str):
-        return content
+        json_start = content.find("{")
+        json_end = content.rfind("}") + 1
+
+        clean = content[json_start:json_end]
+        return clean
 
     # Se è lista (Gemini)
     if isinstance(content, list):

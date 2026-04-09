@@ -19,8 +19,8 @@ class Settings(BaseSettings):
     # Google Gemini
     gemini_api_key: str = os.getenv("GOOGLE_API_KEY")
     gemini_embedding_model: str = "gemini-embedding-2-preview"
-    #gemini_llm_model: str = "gemini-2.5-pro"
-    gemini_llm_model: str = "gemma-4-31b-it" # modello di scorta
+    #gemini_llm_model: str = "gemma-3-27b-it" # modello che non accetta system prompt
+    gemini_llm_model: str = "gemma-4-31b-it" # modello principale
     gemini_eval_model: str = "gemma-4-26b-a4b-it"
     gemini_hyde_model: str = "gemma-3-4b-it"
     

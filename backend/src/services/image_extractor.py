@@ -135,34 +135,3 @@ def save_image_registry(
     }
     with open(output_dir / "registry.json", "w", encoding="utf-8") as f:
         json.dump(registry, f, indent=2, ensure_ascii=False)
-
-
-def get_images_for_chunks(chunk_ids: list[str], images_base_dir: Path) -> list[dict]:
-    """
-    Dato un insieme di chunk_ids recuperati dal RAG,
-    restituisce le immagini collegate a quei chunk leggendo i manifest.
-
-    Usata dal nodo 'respond' del grafo LangGraph per allegare immagini alla risposta.
-    """
-    results = []
-    seen_files: set[str] = set()
-
-    # Scansiona tutti i manifest presenti
-    for manifest_path in images_base_dir.glob("*/registry.json"):
-        with open(manifest_path, "r", encoding="utf-8") as f:
-            manifest = json.load(f)
-
-        for img_entry in manifest["images"]:
-            if img_entry["filename"] in seen_files:
-                continue
-            # Controlla se almeno uno dei chunk_ids richiesti è collegato
-            if any(cid in img_entry["chunk_ids"] for cid in chunk_ids):
-                results.append({
-                    "source": manifest["source"],
-                    "filename": img_entry["filename"],
-                    "path": img_entry["path"],
-                    "page": img_entry["page"],
-                })
-                seen_files.add(img_entry["filename"])
-
-    return results
