@@ -2,8 +2,22 @@ import json
 from agent.prompts import EVAL_RESPONSE_PROMPT
 from langchain_core.messages import HumanMessage, SystemMessage
 from agent.state import AgentState
-from services.groq_client import llm_eval
+from services.llm_client import llm_eval
 
+def extract_text_content(response):
+    content = response.content
+
+    # Se è già stringa (vecchio comportamento)
+    if isinstance(content, str):
+        return content
+
+    # Se è lista (Gemini)
+    if isinstance(content, list):
+        for block in content:
+            if block.get("type") == "text":
+                return block.get("text", "")
+
+    return ""
 
 
 def evaluate_node(state: AgentState) -> AgentState:
@@ -12,13 +26,15 @@ def evaluate_node(state: AgentState) -> AgentState:
         f"Generated response: {state['draft_response']}"
     )
 
+    print("\nInvoking evaluate_node")
     response = llm_eval.invoke([
         SystemMessage(content=EVAL_RESPONSE_PROMPT),
         HumanMessage(content=user_content),
     ])
 
     try:
-        clean = (response.content.strip()
+        raw_text = extract_text_content(response)
+        clean = (raw_text.strip()
                  .removeprefix("```json").removeprefix("```")
                  .removesuffix("```").strip())
         parsed = json.loads(clean)

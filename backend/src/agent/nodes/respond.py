@@ -3,7 +3,7 @@ from pathlib import Path
 from agent.prompts import RESPOND_GENERIC_PROMPT, RESPOND_SYSTEM_PROMPT, RESPOND_OFFTOPIC_PROMPT
 from langchain_core.messages import HumanMessage, SystemMessage
 
-from services.groq_client import llm
+from services.llm_client import llm
 from agent.state import AgentState, ImageResult
 
 def _build_context_messages(state: AgentState) -> list:
@@ -96,6 +96,21 @@ def _extract_images(state: AgentState) -> list[ImageResult]:
             ))
     return images
 
+def extract_text_content(response):
+    content = response.content
+
+    # Se è già stringa (vecchio comportamento)
+    if isinstance(content, str):
+        return content
+
+    # Se è lista (Gemini)
+    if isinstance(content, list):
+        for block in content:
+            if block.get("type") == "text":
+                return block.get("text", "")
+
+    return ""
+
 
 def respond_node(state: AgentState) -> AgentState:
     """
@@ -114,9 +129,10 @@ def respond_node(state: AgentState) -> AgentState:
             HumanMessage(content=state["user_query"])
         ]
         response = llm.invoke(messages)
+        raw_text = extract_text_content(response)
         return {
             **state,
-            "draft_response": response.content,
+            "draft_response": raw_text,
             "response_status": "complete",
             "sources": [],
             "images": [],
@@ -134,10 +150,11 @@ def respond_node(state: AgentState) -> AgentState:
             HumanMessage(content=state["user_query"]),
         ]
         response = llm.invoke(messages)
+        raw_text = extract_text_content(response)
         return {
             **state,
-            "draft_response": response.content,
-            "final_response": response.content,
+            "draft_response": raw_text,
+            "final_response": raw_text,
             "response_status": "complete",
             "is_generic_cybersecurity": True,
             "sources": [],
@@ -153,11 +170,12 @@ def respond_node(state: AgentState) -> AgentState:
     ]
     print(f"\nInvoking LLM with {len(messages)} messages, including {len(state['retrieved_chunks'])} text chunks and {len(state['retrieved_image_chunks'])} image chunks.")
     response = llm.invoke(messages)
+    raw_text = extract_text_content(response)
     print("\nReturning response")
 
     return {
         **state,
-        "draft_response": response.content,
+        "draft_response": raw_text,
         "sources": _extract_sources(state),
         "images": _extract_images(state),
         "is_generic_cybersecurity": False,

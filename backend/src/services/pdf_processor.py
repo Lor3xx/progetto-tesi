@@ -8,7 +8,7 @@ import pymupdf4llm
 from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
-from services.groq_client import describe_image
+from services.llm_client import describe_image
 from config import settings
 from services.chroma_service import add_documents, document_exists
 

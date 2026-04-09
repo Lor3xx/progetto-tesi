@@ -6,7 +6,7 @@ from api.schemas import ChatRequest, ChatResponse, ImageResult
 from langchain_core.messages import HumanMessage, SystemMessage
 from agent.state import AgentState
 from config import settings
-from services.groq_client import llm_eval
+from services.llm_client import llm_eval
 
 router = APIRouter(prefix="/chat", tags=["chat"])
 
@@ -21,6 +21,7 @@ def generate_title(user_message: str) -> str:
     ]
 
     response = llm_eval.invoke(messages)
+    print(f"Generated title: {response}")
 
     return response.content.strip()
 
@@ -79,6 +80,7 @@ async def chat(request: ChatRequest, req: Request):
     try:
         result = rag_graph.invoke(initial_state, config=config)
     except Exception as e:
+        print(f"❌ Errore durante l'invocazione del grafo: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Errore nel grafo: {str(e)}")
 
     #print di debug

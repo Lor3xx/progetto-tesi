@@ -1,7 +1,23 @@
 import json
 from agent.prompts import RERANK_PROMPT
 from agent.state import AgentState
-from services.groq_client import llm_eval
+from services.llm_client import llm
+
+def extract_text_content(response):
+    content = response.content
+
+    # Se è già stringa (vecchio comportamento)
+    if isinstance(content, str):
+        return content
+
+    # Se è lista (Gemini)
+    if isinstance(content, list):
+        for block in content:
+            if block.get("type") == "text":
+                return block.get("text", "")
+
+    return ""
+
 
 def rerank_node(state: AgentState) -> dict:
     chunks = state.get("retrieved_chunks", [])
@@ -22,8 +38,10 @@ def rerank_node(state: AgentState) -> dict:
             chunks=numbered,
         )
         try:
-            response = llm_eval.invoke(prompt)
-            raw = response.content.strip()
+            print("\nInvoking rerank_node for text chunks")
+            response = llm.invoke(prompt)
+            raw_text = extract_text_content(response)
+            raw = raw_text.strip()
             # rimuove eventuali backtick markdown
             raw = raw.replace("```json", "").replace("```", "").strip()
             indices = json.loads(raw)
@@ -51,8 +69,10 @@ def rerank_node(state: AgentState) -> dict:
             chunks=numbered,
         )
         try:
-            response = llm_eval.invoke(prompt)
-            raw = response.content.strip()
+            print("\nInvoking rerank_node for image chunks")
+            response = llm.invoke(prompt)
+            raw_text = extract_text_content(response)
+            raw = raw_text.strip()
             raw = raw.replace("```json", "").replace("```", "").strip()
             indices = json.loads(raw)
             print(f"Reranking result for images: {indices}")

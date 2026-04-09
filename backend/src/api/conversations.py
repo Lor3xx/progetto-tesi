@@ -309,6 +309,7 @@ async def delete_conversation(thread_id: str) -> None:
 def update_conversation_title(thread_id: str, body: TitleUpdate):
     conn = sqlite3.connect(settings.sqlite_path)
 
+    print(f"Updating title for thread_id={thread_id} to '{body.new_title}'")
     res = conn.execute(
         """
         UPDATE conversations

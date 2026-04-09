@@ -3,6 +3,9 @@ Usato per creare la conoscenza di base del chat bot.
 """
 
 from pathlib import Path
+import sys
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent)) 
 from services.pdf_processor import ingest_base_knowledge
 
 

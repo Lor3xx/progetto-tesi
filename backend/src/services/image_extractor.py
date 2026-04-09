@@ -5,12 +5,13 @@ from pathlib import Path
 
 import pymupdf
 from PIL import Image
+from config import settings
 
 # Dimensione minima per considerare un'immagine utile (filtra loghi piccoli)
-MIN_WIDTH = 100
-MIN_HEIGHT = 100
+MIN_WIDTH = settings.min_width
+MIN_HEIGHT = settings.min_height
 # Soglia per scartare immagini quasi completamente bianche (sfondi, separatori)
-WHITE_RATIO_THRESHOLD = 0.95
+WHITE_RATIO_THRESHOLD = settings.white_ratio_threshold
 
 
 def _is_useful_image(image_bytes: bytes, width: int, height: int) -> bool:

@@ -14,10 +14,9 @@ from pathlib import Path
 import numpy as np
 import pymupdf
 from langchain_core.messages import HumanMessage, SystemMessage
-from services.groq_client import llm_eval
+from services.llm_client import llm_validator, embeddings
 
-from config import settings
-from services.groq_client import embeddings
+from config import settings 
 import json 
 
 # ── Corpus di riferimento cybersecurity ──────────────────────────────────────
@@ -115,10 +114,14 @@ def _compute_cyber_score(text: str) -> float:
 
 
 def _ask_llm(text_sample: str) -> tuple[bool, str]:
-    response = llm_eval.invoke([
-        SystemMessage(content=DOC_RELEVANCE_PROMPT),
-        HumanMessage(content=text_sample),
-    ])
+    try:
+        response = llm_validator.invoke([
+            SystemMessage(content=DOC_RELEVANCE_PROMPT),
+            HumanMessage(content=text_sample),
+        ])
+    except Exception as e:
+        print(f"LLM validation failed: {e}")
+        return False, "Errore durante la valutazione LLM"
 
     try:
         clean = (response.content.strip()

@@ -1,0 +1,86 @@
+{
+  "source": "test_upload.pdf",
+  "total_images_processed": 16,
+  "images": [
+    {
+      "path": "data\\images\\test_upload\\page_2_img_433.png",
+      "page": 2,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\test_upload\\page_2_img_434.png",
+      "page": 2,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\test_upload\\page_2_img_435.png",
+      "page": 2,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\test_upload\\page_2_img_436.png",
+      "page": 2,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\test_upload\\page_2_img_437.png",
+      "page": 2,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\test_upload\\page_2_img_438.png",
+      "page": 2,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\test_upload\\page_2_img_439.png",
+      "page": 2,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\test_upload\\page_2_img_440.png",
+      "page": 2,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\test_upload\\page_3_img_463.png",
+      "page": 3,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\test_upload\\page_3_img_464.png",
+      "page": 3,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\test_upload\\page_3_img_465.png",
+      "page": 3,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\test_upload\\page_3_img_466.png",
+      "page": 3,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\test_upload\\page_3_img_467.png",
+      "page": 3,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\test_upload\\page_3_img_468.png",
+      "page": 3,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\test_upload\\page_3_img_469.png",
+      "page": 3,
+      "status": "skipped"
+    },
+    {
+      "path": "data\\images\\test_upload\\page_8_img_557.png",
+      "page": 8,
+      "status": "skipped"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 from langchain_chroma import Chroma
 from config import settings
-from services.groq_client import embeddings, hyde_embedder
+from services.llm_client import embeddings, hyde_embedder
 
 vector_store = Chroma(
     collection_name=settings.chroma_collection,
@@ -30,6 +30,7 @@ def _clamp_scores(results: list[tuple]) -> list[tuple]:
 # Legacy
 def similarity_search(query: str, k: int | None = None) -> list:
     """
+    (Legacy: versione senza HyDE)
     Cerca i documenti più simili alla query tra quelli della knowledge base.
     Restituisce una lista di Document con score di rilevanza.
     """
@@ -55,6 +56,7 @@ def similarity_search_prioritized(query: str, k: int | None = None) -> list:
     """
     top_k = k or settings.retrieval_top_k
 
+    print(f"Performing similarity search with HyDE")
     hyde_embedding = hyde_embedder.embed_query(query)
 
     # Recupera più risultati del necessario per avere margine dopo il riordino
@@ -80,6 +82,7 @@ def similarity_search_prioritized(query: str, k: int | None = None) -> list:
 def similarity_search_images(query: str, k: int = 3) -> list:
     """Cerca specificamente tra i chunk image_description."""
 
+    print(f"Performing similarity search for images with HyDE")
     hyde_embedding = hyde_embedder.embed_query(query)
     
     results = vector_store.similarity_search_by_vector_with_relevance_scores(

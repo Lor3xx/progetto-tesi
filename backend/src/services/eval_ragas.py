@@ -11,7 +11,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from datasets import Dataset
 
 from agent.graph import build_graph
-from groq_client import llm, embeddings
+from services.llm_client import llm, embeddings
 from agent.state import AgentState
 from ragas import evaluate
 from ragas.metrics import Faithfulness, AnswerRelevancy

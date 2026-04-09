@@ -40,7 +40,12 @@ The query is unclear but could relate to cybersecurity given the history.
 
 ### Output format
 You can't answer the question directly, you can only enhance it for better retrieval.
-Provide the enhanced query, a one-sentence reasoning and the list of missing aspects that would help answer the question if they were present in the retrieved documents.
+Respond ONLY in this JSON format:
+{
+  "enhanced_query": "...",
+  "enhancement_reasoning": "...",
+  "missing_aspects": [...]
+}
 """
 
 # Prompt per il secondo tentativo sempre di enhance, quando l'evaluator ha già detto cosa manca
@@ -58,7 +63,12 @@ What was missing from retrieved documents: {missing_aspects}
 Rewrite the query to target the missing aspects. Add different keywords and synonyms
 
 Respond ONLY in this JSON format, no markdown, no backticks:
-Provide the enhanced query, a one-sentence reasoning, and the list of missing aspects.
+Respond ONLY in this JSON format:
+{
+  "enhanced_query": "...",
+  "enhancement_reasoning": "...",
+  "missing_aspects": [...]
+}
 """
 
 # Prompt per il nodo classify, che decide se la domanda è off-topic o a tema cybersecurity
