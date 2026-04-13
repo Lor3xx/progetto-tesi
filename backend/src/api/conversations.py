@@ -11,13 +11,14 @@ costruire l'anteprima da mostrare nella sidebar.
 
 from __future__ import annotations
 
+import json
 import sqlite3
 from datetime import datetime, timezone
 
 from fastapi import APIRouter, HTTPException, Query
 
 from config import settings 
-from api.schemas import ConversationListResponse, ConversationPreview, TitleUpdate
+from api.schemas import ConversationListResponse, ConversationPreview, ConversationSettings, SettingsUpdate, TitleUpdate
 import msgpack 
 
 router = APIRouter(prefix="/conversations", tags=["conversations"])
@@ -294,7 +295,13 @@ async def delete_conversation(thread_id: str) -> None:
             check_same_thread=False,
         )
         conn.execute(
+            "DELETE FROM conversations WHERE thread_id = ?", (thread_id,)
+        )
+        conn.execute(
             "DELETE FROM checkpoints WHERE thread_id = ?", (thread_id,)
+        )
+        conn.execute(
+            "DELETE FROM writes WHERE thread_id = ?", (thread_id,)
         )
         conn.commit()
         conn.close()
@@ -324,3 +331,74 @@ def update_conversation_title(thread_id: str, body: TitleUpdate):
 
     conn.commit()
     conn.close()
+
+
+# ---------------------------------------------------------------------------
+# Endpoint: modifica le impostazioni della conversazione (tone, temperature, ecc.)
+# ---------------------------------------------------------------------------
+@router.put("/{thread_id}/settings")
+async def update_conversation_settings(
+    thread_id: str,
+    user_settings: SettingsUpdate,
+) -> dict:
+    """Aggiorna le impostazioni di una conversazione."""
+    try:
+        with sqlite3.connect(settings.sqlite_path) as conn:
+            conn.row_factory = sqlite3.Row
+            cursor = conn.cursor()
+            
+            settings_json = json.dumps(user_settings.model_dump())
+            cursor.execute(
+                "UPDATE conversations SET settings = ? WHERE thread_id = ?",
+                (settings_json, thread_id)
+            )
+            conn.commit()
+            
+            if cursor.rowcount == 0:
+                raise HTTPException(status_code=404, detail="Conversation not found")
+            
+            return {
+                "status": "success",
+                "settings": user_settings.model_dump()
+            }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+# ---------------------------------------------------------------------------
+# Endpoint: recupera le impostazioni di una conversazione
+# ---------------------------------------------------------------------------
+@router.get("/{thread_id}/settings")
+async def get_conversation_settings(
+    thread_id: str,
+) -> ConversationSettings:
+    """Recupera le impostazioni di una conversazione."""
+    try:
+        with sqlite3.connect(settings.sqlite_path) as conn:
+            conn.row_factory = sqlite3.Row
+            cursor = conn.cursor()
+            cursor.execute(
+                "SELECT settings FROM conversations WHERE thread_id = ?",
+                (thread_id,)
+            )
+            row = cursor.fetchone()
+            
+            if not row:
+                raise HTTPException(status_code=404, detail="Conversation not found")
+            
+            settings_json = row["settings"]
+            # Se NULL o vuoto, usa defaults
+            if not settings_json:
+                user_settings = {
+                    "tone": "technical",
+                    "temperature": 0.2,
+                    "response_length": "balanced"
+                }
+            else:
+                user_settings = json.loads(settings_json)
+
+            return ConversationSettings(**user_settings)
+    except json.JSONDecodeError:
+        raise HTTPException(status_code=400, detail="Invalid settings format")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

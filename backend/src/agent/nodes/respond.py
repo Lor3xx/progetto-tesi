@@ -1,9 +1,9 @@
 from pathlib import Path
 
-from agent.prompts import RESPOND_GENERIC_PROMPT, RESPOND_SYSTEM_PROMPT, RESPOND_OFFTOPIC_PROMPT
+from agent.prompts import get_respond_generic_prompt, get_respond_system_prompt, RESPOND_OFFTOPIC_PROMPT
 from langchain_core.messages import HumanMessage, SystemMessage
 
-from services.llm_client import llm
+from services.llm_client import get_llm, llm
 from agent.state import AgentState, ImageResult
 
 def _build_context_messages(state: AgentState) -> list:
@@ -128,7 +128,10 @@ def respond_node(state: AgentState) -> AgentState:
             *state["messages"],  # cronologia messaggi precedente
             HumanMessage(content=state["user_query"])
         ]
-        response = llm.invoke(messages)
+        user_settings = state.get("user_settings", {})
+        temperature = user_settings.get("temperature", 0.2)
+        llm_respond = get_llm(temperature)
+        response = llm_respond.invoke(messages)
         raw_text = extract_text_content(response)
         return {
             **state,
@@ -144,12 +147,17 @@ def respond_node(state: AgentState) -> AgentState:
         len(state["retrieved_image_chunks"]) > 0
     )
     if not has_chunks:
+        user_settings = state.get("user_settings", {})
+        tone = user_settings.get("tone", "technical")
+        response_length = user_settings.get("response_length", "balanced")
+        temperature = user_settings.get("temperature", 0.2)
+        llm_respond = get_llm(temperature)
         messages = [
-            SystemMessage(content=RESPOND_GENERIC_PROMPT),
+            SystemMessage(content=get_respond_generic_prompt(tone, response_length)),
             *state["messages"],  # cronologia messaggi precedente
             HumanMessage(content=state["user_query"]),
         ]
-        response = llm.invoke(messages)
+        response = llm_respond.invoke(messages)
         raw_text = extract_text_content(response)
         return {
             **state,
@@ -163,13 +171,19 @@ def respond_node(state: AgentState) -> AgentState:
 
     # Caso 3: RAG normale con chunk e immagini
     content = _build_context_messages(state)
+    # Estrai settings dallo state
+    user_settings = state.get("user_settings", {})
+    tone = user_settings.get("tone", "technical")
+    response_length = user_settings.get("response_length", "balanced")
+    temperature = user_settings.get("temperature", 0.2)
+    llm_respond = get_llm(temperature)
     messages = [
-        SystemMessage(content=RESPOND_SYSTEM_PROMPT),
+        SystemMessage(content=get_respond_system_prompt(tone, response_length)),
         *state["messages"],  # cronologia messaggi precedente
         HumanMessage(content=content),
     ]
     print(f"\nInvoking LLM with {len(messages)} messages, including {len(state['retrieved_chunks'])} text chunks and {len(state['retrieved_image_chunks'])} image chunks.")
-    response = llm.invoke(messages)
+    response = llm_respond.invoke(messages)
     raw_text = extract_text_content(response)
     print("\nReturning response")
 

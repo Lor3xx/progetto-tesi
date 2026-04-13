@@ -1,3 +1,4 @@
+import json
 from uuid import uuid4
 import sqlite3
 
@@ -36,11 +37,13 @@ async def chat(request: ChatRequest, req: Request):
     if not rag_graph:
         raise HTTPException(status_code=503, detail="Sistema non ancora pronto")
 
+    # Se thread_id è fornito, usalo; altrimenti, creane uno nuovo
     thread_id = request.thread_id or str(uuid4())
     is_new_conversation = request.thread_id is None
 
     conn = sqlite3.connect(settings.sqlite_path, check_same_thread=False)
 
+    # Se è una nuova conversazione, prova a generare un titolo e inserisci il record
     if is_new_conversation:
         try:
             title = generate_title(request.message)
@@ -55,7 +58,28 @@ async def chat(request: ChatRequest, req: Request):
     )
     conn.commit()
 
+    # Recupera le impostazioni della conversazione
+    user_settings = {}
+    try:
+        with sqlite3.connect(settings.sqlite_path) as conn:
+            conn.row_factory = sqlite3.Row
+            cursor = conn.cursor()
+            cursor.execute(
+                "SELECT settings FROM conversations WHERE thread_id = ?",
+                (thread_id,)
+            )
+            row = cursor.fetchone()
+            if row and row["settings"]:
+                user_settings = json.loads(row["settings"])
+    except:
+        user_settings = {
+            "tone": "technical",
+            "temperature": 0.2,
+            "response_length": "balanced"
+        }
+
     initial_state = AgentState(
+        user_settings=user_settings,
         user_query=request.message,
         enhanced_query="",
         enhancement_reasoning="",

@@ -179,7 +179,7 @@ const ChatBody = () => {
                     </div>
                 ) : (
                     <>
-                        <MessageList messages={messages} />
+                        <MessageList messages={messages} threadId={threadId} />
                         {loading && <TypingIndicator />}
                         <div ref={bottomRef} />
                     </>

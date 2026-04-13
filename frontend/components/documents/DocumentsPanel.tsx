@@ -45,10 +45,6 @@ export default function DocumentsPanel({
   const userDocs   = documents.filter((d) => d.source === "user");
   const systemDocs = documents.filter((d) => d.source === "system");
 
-  console.log("Loaded documents:", documents);
-  console.log("User docs:", userDocs);
-  console.log("System docs:", systemDocs);
-
   return (
     <>
       {/* Backdrop semi-trasparente */}

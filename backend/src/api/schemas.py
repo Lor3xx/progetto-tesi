@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class ChatRequest(BaseModel):
@@ -58,3 +58,14 @@ class UploadResponse(BaseModel):
     chunks_ingested: int | None = None
     validation_score: float | None = None
     validation_method: str | None = None
+
+
+class SettingsUpdate(BaseModel):
+    tone: str = "technical"  # "technical", "simple", "educational"
+    temperature: float = Field(0.7, ge=0.0, le=2.0)
+    response_length: str = "balanced"  # "concise", "balanced", "detailed"
+
+class ConversationSettings(BaseModel):
+    tone: str
+    temperature: float
+    response_length: str

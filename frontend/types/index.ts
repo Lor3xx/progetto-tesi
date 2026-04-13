@@ -69,3 +69,15 @@ export interface Document {
   size_bytes: number;
   source: "user" | "system";
 }
+
+
+export interface Settings {
+	tone: "technical" | "simple" | "educational";
+	temperature: number;
+	response_length: "concise" | "balanced" | "detailed";
+}
+
+export interface SettingsDialogProps {
+	threadId: string;
+	onClose: () => void;
+}

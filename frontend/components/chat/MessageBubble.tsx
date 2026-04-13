@@ -1,20 +1,52 @@
 import { Message } from "@/types";
 import SourceCard from "./SourceCard";
 import ImageCard from "./ImageCard";
+import { useEffect, useState } from "react";
 
 function formatTime(d: Date) {
   return d.toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" });
 }
 
-const MessageBubble = ({ msg }: { msg: Message }) => {
+const getShowSourcesForThread = (threadId?: string | null): boolean => {
+	if (!threadId) return true;
+	try {
+		const stored = sessionStorage.getItem(`show-sources-${threadId}`);
+		return stored === null ? true : stored === "true";
+	} catch {
+		return true;
+	}
+};
+
+const MessageBubble = ({ msg, threadId }: { msg: Message, threadId: string | null }) => {
     const isUser = msg.role === "user";
+    const [showSources, setShowSources] = useState(
+        getShowSourcesForThread(threadId)
+    );
+
+    // Leggi lo stato quando il thread cambia
+    useEffect(() => {
+        setShowSources(getShowSourcesForThread(threadId));
+    }, [threadId]);
+
+    // Ascolta i cambi di visibilità delle fonti dal menu
+    useEffect(() => {
+        const handler = (e: Event) => {
+            const event = e as CustomEvent;
+            if (!threadId || event.detail.threadId === threadId) {
+                setShowSources(event.detail.showSources);
+            }
+        };
+        window.addEventListener("show-sources-changed", handler);
+        return () => window.removeEventListener("show-sources-changed", handler);
+    }, [threadId]);
+    
     return (
         <div className={`message-row ${isUser ? "user" : "assistant"}`}>
             <div className="avatar">{isUser ? "U" : "AI"}</div>
             <div className="bubble-wrap">
                 <div className={`bubble ${isUser ? "bubble-user" : "bubble-assistant"}`}>
                 <p className="bubble-text">{msg.text}</p>
-                    {msg.sources && msg.sources.length > 0 && (
+                    {showSources  && msg.sources && msg.sources.length > 0 && (
                         <div className="sources-section">
                         <p className="sources-label">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

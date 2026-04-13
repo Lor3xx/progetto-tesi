@@ -33,7 +33,8 @@ async def lifespan(app: FastAPI):
     conn.execute("""
     CREATE TABLE IF NOT EXISTS conversations (
         thread_id TEXT PRIMARY KEY,
-        title TEXT
+        title TEXT,
+        settings TEXT DEFAULT '{"tone": "technical", "temperature": 0.2, "response_length": "balanced"}'
     )
     """)
     conn.commit()

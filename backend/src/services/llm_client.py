@@ -55,8 +55,17 @@ embeddings_gemini = GoogleGenerativeAIEmbeddings(
 llm = llm_gemini
 llm_eval = llm_eval_groq
 embeddings = embeddings_hf
-llm_enhance = llm_eval_groq
+llm_enhance = llm_groq
 llm_validator = llm_groq
+
+# Modello con temperatura dinamica
+def get_llm(temperature: float = 0.2) -> ChatGoogleGenerativeAI:
+    """Ritorna LLM con temperatura configurabile."""
+    return ChatGoogleGenerativeAI(
+        google_api_key=settings.gemini_api_key,
+        model=settings.gemini_llm_model,
+        temperature=temperature,
+    )
 
 llm_hyde = ChatGoogleGenerativeAI(
     google_api_key=settings.gemini_api_key,

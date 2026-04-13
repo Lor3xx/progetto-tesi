@@ -686,21 +686,22 @@ textarea::placeholder { color: var(--text-muted); }
 	border: 1px solid transparent;
 	transition: background 0.12s, border-color 0.12s;
 	outline: none;
+	position: relative;
 }
- 
+
 .conv-item:hover {
 	background: var(--surface2);
 }
- 
+
 .conv-item:focus-visible {
 	box-shadow: 0 0 0 2px var(--accent);
 }
- 
+
 .conv-item.active {
 	background: var(--surface2);
 	border-color: var(--border);
 }
- 
+
 .conv-item-body {
 	flex: 1;
 	min-width: 0;
@@ -708,7 +709,7 @@ textarea::placeholder { color: var(--text-muted); }
 	flex-direction: column;
 	gap: 3px;
 }
- 
+
 .conv-item-title {
 	font-size: 0.83rem;
 	color: var(--text);
@@ -717,12 +718,12 @@ textarea::placeholder { color: var(--text-muted); }
 	text-overflow: ellipsis;
 	line-height: 1.3;
 }
- 
+
 .conv-item.active .conv-item-title {
 	color: var(--accent);
 	font-weight: 500;
 }
- 
+
 .conv-item-date {
 	font-size: 0.68rem;
 	color: var(--text-muted);
@@ -732,9 +733,11 @@ textarea::placeholder { color: var(--text-muted); }
 .conv-item-actions {
 	display: flex;
 	gap: 6px;
+	position: relative;
 }
- 
-.conv-item-del {
+
+/* Menu a 3 punti */
+.conv-item-menu {
 	flex-shrink: 0;
 	display: flex;
 	align-items: center;
@@ -748,39 +751,108 @@ textarea::placeholder { color: var(--text-muted); }
 	cursor: pointer;
 	opacity: 0;
 	transition: opacity 0.12s, background 0.12s, color 0.12s;
+	padding: 0;
 }
- 
-.conv-item:hover .conv-item-del {
+
+.conv-item:hover .conv-item-menu {
 	opacity: 1;
 }
- 
+
+.conv-item-menu:hover,
+.conv-item-menu.open {
+	background: rgba(79, 142, 247, 0.15);
+	color: var(--accent);
+}
+
+/* Dropdown menu */
+.conv-item-menu-dropdown {
+	position: absolute;
+	top: calc(100% + 4px);
+	right: 0;
+	background: var(--surface);
+	border: 1px solid var(--border);
+	border-radius: 6px;
+	min-width: 140px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+	z-index: 100;
+	display: flex;
+	flex-direction: column;
+}
+
+.conv-item-menu-dropdown button {
+	background: none;
+	border: none;
+	padding: 8px 12px;
+	text-align: left;
+	cursor: pointer;
+	color: var(--text);
+	font-size: 13px;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	transition: background 0.2s;
+	width: 100%;
+}
+
+.conv-item-menu-dropdown button:hover {
+	background: var(--bg);
+}
+
+.conv-item-menu-dropdown button:first-child {
+	border-radius: 6px 6px 0 0;
+}
+
+.conv-item-menu-dropdown button:last-child {
+	border-radius: 0 0 6px 6px;
+}
+
+.conv-item-menu-dropdown button svg {
+	flex-shrink: 0;
+	width: 16px;
+	height: 16px;
+}
+
+/* Colori specifici per le azioni nel dropdown */
+.conv-item-edit {
+	color: var(--text);
+}
+
+.conv-item-edit:hover {
+	color: var(--accent);
+}
+
+.conv-item-del {
+	color: var(--text);
+}
+
 .conv-item-del:hover {
-	background: rgba(248, 113, 113, 0.15);
 	color: var(--danger);
 }
 
-.conv-item-edit {
-	flex-shrink: 0;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	width: 22px;
-	height: 22px;
-	border: none;
-	border-radius: 5px;
-	background: transparent;
-	color: var(--text-muted);
-	cursor: pointer;
-	opacity: 0;
-	transition: opacity 0.12s, background 0.12s, color 0.12s;
+.conv-item-settings {
+	color: var(--text);
 }
 
-.conv-item:hover .conv-item-edit {
+.conv-item-settings:hover {
+	color: var(--accent);
+}
+
+.conv-item-sources {
+	color: var(--text);
+}
+
+.conv-item-sources:hover {
+	color: var(--accent);
+}
+
+/* Stile toggle attivo/inattivo */
+.conv-item-sources.active svg {
 	opacity: 1;
 }
- 
-.conv-item-edit:hover {
-	background: rgba(79, 142, 247, 0.15);
+
+.conv-item-sources svg {
+	opacity: 0.6;
+	transition: opacity 0.2s;
 }
 
 .conv-item-input {
@@ -791,6 +863,226 @@ textarea::placeholder { color: var(--text-muted); }
 	border-radius: 6px;
 	padding: 2px 6px;
 	color: inherit;
+}
+
+/* ── Dialog Styles ────────────────────────────────────────────────────────── */
+
+.dialog-overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba(0, 0, 0, 0.5);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 1000;
+}
+
+.dialog-content {
+	background: var(--surface);
+	border: 1px solid var(--border);
+	border-radius: 12px;
+	max-width: 400px;
+	width: 90%;
+	max-height: 80vh;
+	overflow-y: auto;
+	box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.dialog-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 16px 20px;
+	border-bottom: 1px solid var(--border);
+}
+
+.dialog-header h2 {
+	margin: 0;
+	font-size: 16px;
+	color: var(--text);
+}
+
+.dialog-close {
+	background: none;
+	border: none;
+	font-size: 24px;
+	cursor: pointer;
+	color: var(--text-secondary);
+	padding: 0;
+	width: 24px;
+	height: 24px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.dialog-close:hover {
+	color: var(--text);
+}
+
+.dialog-body {
+	padding: 20px;
+}
+
+.dialog-error {
+	color: #ff6b6b;
+	padding: 8px;
+	background: rgba(255, 107, 107, 0.1);
+	border-radius: 6px;
+	font-size: 13px;
+	margin-bottom: 16px;
+}
+
+.settings-group {
+	margin-bottom: 24px;
+}
+
+.settings-group label {
+	display: block;
+	font-size: 13px;
+	font-weight: 600;
+	color: var(--text);
+	margin-bottom: 8px;
+}
+
+.settings-description {
+	font-size: 12px;
+	color: var(--text-secondary);
+	margin-top: 6px;
+	margin-bottom: 0;
+}
+
+.settings-options {
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
+	gap: 6px;
+}
+
+.settings-option {
+	padding: 8px 12px;
+	background: var(--bg);
+	border: 1px solid var(--border);
+	border-radius: 6px;
+	cursor: pointer;
+	font-size: 12px;
+	color: var(--text-secondary);
+	transition: all 0.2s;
+}
+
+.settings-option:hover {
+	border-color: var(--accent);
+	color: var(--accent);
+}
+
+.settings-option.active {
+	background: var(--accent);
+	border-color: var(--accent);
+	color: white;
+}
+
+.settings-slider {
+	width: 100%;
+	height: 6px;
+	border-radius: 3px;
+	background: var(--bg);
+	outline: none;
+	-webkit-appearance: none;
+	appearance: none;
+}
+
+.settings-slider::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	appearance: none;
+	width: 16px;
+	height: 16px;
+	border-radius: 50%;
+	background: var(--accent);
+	cursor: pointer;
+	transition: background 0.2s;
+}
+
+.settings-slider::-moz-range-thumb {
+	width: 16px;
+	height: 16px;
+	border-radius: 50%;
+	background: var(--accent);
+	cursor: pointer;
+	border: none;
+	transition: background 0.2s;
+}
+
+.settings-slider::-webkit-slider-thumb:hover {
+	background: var(--accent-dark);
+}
+
+.settings-temp-display {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	margin-top: 8px;
+	font-size: 12px;
+}
+
+.temp-value {
+	font-weight: 600;
+	color: var(--accent);
+	min-width: 30px;
+}
+
+.temp-label {
+	color: var(--text-secondary);
+}
+
+.dialog-footer {
+	display: flex;
+	gap: 8px;
+	padding: 16px 20px;
+	border-top: 1px solid var(--border);
+	background: var(--bg);
+}
+
+.btn-cancel,
+.btn-save {
+	flex: 1;
+	padding: 10px 16px;
+	border: 1px solid var(--border);
+	border-radius: 6px;
+	cursor: pointer;
+	font-size: 13px;
+	font-weight: 500;
+	transition: all 0.2s;
+}
+
+.btn-cancel {
+	background: var(--bg);
+	color: var(--text);
+}
+
+.btn-cancel:hover {
+	background: var(--surface);
+}
+
+.btn-cancel:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+.btn-save {
+	background: var(--accent);
+	color: white;
+	border-color: var(--accent);
+}
+
+.btn-save:hover {
+	opacity: 0.9;
+}
+
+.btn-save:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
 }
 
 /* ── ConfirmDialog ───────────────────────────────────────────────── */

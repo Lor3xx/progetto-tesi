@@ -19,6 +19,9 @@ class ImageResult(TypedDict):
 
 
 class AgentState(TypedDict):
+    # --- Impostazioni ---
+    user_settings: dict  # impostazioni specifiche della conversazione
+    
     # --- Input iniziale ---
     user_query: str                          # domanda originale dell'utente
 
