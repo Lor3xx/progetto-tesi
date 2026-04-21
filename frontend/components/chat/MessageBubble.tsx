@@ -2,6 +2,7 @@ import { Message } from "@/types";
 import SourceCard from "./SourceCard";
 import ImageCard from "./ImageCard";
 import { useEffect, useState } from "react";
+import ReactMarkdown from "react-markdown";
 
 function formatTime(d: Date) {
   return d.toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" });
@@ -45,7 +46,9 @@ const MessageBubble = ({ msg, threadId }: { msg: Message, threadId: string | nul
             <div className="avatar">{isUser ? "U" : "AI"}</div>
             <div className="bubble-wrap">
                 <div className={`bubble ${isUser ? "bubble-user" : "bubble-assistant"}`}>
-                <p className="bubble-text">{msg.text}</p>
+                <div className="bubble-text">
+                    <ReactMarkdown>{msg.text}</ReactMarkdown>
+                </div>
                     {showSources  && msg.sources && msg.sources.length > 0 && (
                         <div className="sources-section">
                         <p className="sources-label">

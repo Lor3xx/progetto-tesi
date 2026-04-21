@@ -1014,10 +1014,6 @@ textarea::placeholder { color: var(--text-muted); }
 	transition: background 0.2s;
 }
 
-.settings-slider::-webkit-slider-thumb:hover {
-	background: var(--accent-dark);
-}
-
 .settings-temp-display {
 	display: flex;
 	align-items: center;
